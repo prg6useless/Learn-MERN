@@ -128,9 +128,12 @@ const getCredentials = () => {
 
 const toProperCase = (name) => {
   let words = name.split(" ");
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i].charAt(0).toUpperCase().concat(words[i].slice(1)); //chaining
-  }
+  // for (let i = 0; i < words.length; i++) {
+  //   words[i] = words[i].charAt(0).toUpperCase().concat(words[i].slice(1)); //chaining
+  // }
+  words = words.map((items) =>
+    items.charAt(0).toUpperCase().concat(items.slice(1))
+  ); // using map method
   return words.join(" ");
 };
 

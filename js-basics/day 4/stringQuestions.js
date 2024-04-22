@@ -65,6 +65,11 @@ const notRepeated = (str = "abacddbec") => {
 
 console.log(notRepeated());
 
+// const noRepeat = (str = "abacddbec") => {
+//   console.log(str.split("").map((items) => ));
+// };
+
+// noRepeat();
 //6.
 
 const findLongestCountryName = (nameList) => {

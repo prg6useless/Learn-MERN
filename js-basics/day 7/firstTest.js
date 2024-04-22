@@ -54,3 +54,7 @@ const findUser = (users, input) =>
   users.filter((item) => item.name.includes(input));
 
 console.log(findUser(userName, input));
+
+
+// good practices
+
