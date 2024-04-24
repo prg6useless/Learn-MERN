@@ -1,3 +1,8 @@
+// create http server that takes user input as request and
+// find a package that convert user currency input in usd to
+// npr currency
+// 1 usd => 133 npr
+
 const http = require("http");
 const url = require("url");
 

@@ -1,19 +1,21 @@
-// const properCase = require("./proper-upper-case");
-
-// const result = properCase("saral sainju");
-// console.log({ result });
-
+const properCase = require("proper-upper-case");
 const QRCode = require("qrcode");
 const http = require("http");
 
+const result = properCase("saral sainju");
+console.log({ result });
+
 // generate qr code in terminal
-// QRCode.toString(
-//   "https://www.saralsainju.com.np/",
-//   { type: "terminal" },
-//   (err, url) => {
-//     console.log(url);
-//   }
-// );
+QRCode.toString(
+  "https://www.saralsainju.com.np/",
+  { type: "terminal" },
+  (err, url) => {
+    console.log(url);
+  }
+);
+
+// save qr code as image
+QRCode.toFile("website.png", [{ data: "https://www.saralsainju.com.np/" }]);
 
 // generate qrcode using url query
 
@@ -27,10 +29,3 @@ http
     }
   })
   .listen(3000);
-
-// save qr code as image
-// QRCode.toFile("website.png", [{ data: "https://www.saralsainju.com.np/" }]);
-
-// create http server that takes user input as request and
-// find a package that convert user input to currency
-// 1 usd => 133 npr
