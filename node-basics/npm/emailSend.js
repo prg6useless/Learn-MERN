@@ -1,5 +1,8 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
+const fs = require("fs");
+
+const file = fs.readFileSync("website.png", (err) => console.log(err.message));
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -12,12 +15,14 @@ const transporter = nodemailer.createTransport({
 });
 
 // async..await is not allowed in global scope, must use a wrapper
-async function main({ to, subject, html }) {
+async function main({ to, subject, text, attachments, html }) {
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: '"Saral Sainju" <saralsainju07@gmail.com>', // sender address
     to, // list of receivers
-    subject, // Subject line
+    subject,
+    text,
+    attachments, // Subject line
     html, // html body
   });
 
@@ -28,7 +33,22 @@ async function main({ to, subject, html }) {
 main({
   to: "sainju.saral433@gmail.com",
   subject: "Nodemailer MSG",
-  html: "<h3>This email is sent using nodejs package Nodemailer</h3>",
+  text: "This is a random line",
+  attachments: [
+    {
+      // define custom content type for the attachment
+      filename: "output.pdf",
+      content: "Hi This Is Spam Sent from Node.js!",
+      contentType: "text/plain",
+    },
+    //send image
+    // {
+    //   filename:'imageName.png',
+    //   path:'imagePath.png',
+    //   cid:'image',
+    // }
+  ],
+  html: "<img src='cid:image' />",
 }).catch(console.error);
 
 //hw
