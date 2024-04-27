@@ -11,7 +11,7 @@ const createPDF = (path) => {
     valign: "center",
   });
   doc.end();
-  console.log("created pdf");
+  console.log("Created PDF");
 };
 
 module.exports = { createPDF };

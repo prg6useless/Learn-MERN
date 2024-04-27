@@ -41,7 +41,7 @@ http
   .listen(7777);
 
 const mailSender = ({ attachments }) => {
-  const msg = mail.sendMail({
+  mail.sendMail({
     username: process.env.APP_USERNAME,
     password: process.env.APP_PASSWORD,
     attachments,
