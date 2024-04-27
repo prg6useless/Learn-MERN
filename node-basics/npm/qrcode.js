@@ -23,9 +23,10 @@ http
   .createServer(async (req, res) => {
     if (req.url.split("=")[1] !== undefined) {
       const qr = await QRCode.toDataURL(req.url.split("=")[1]);
+      console.log(qr)
       const img = `<img src="${qr}"/>`;
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end(img);
     }
   })
-  .listen(3000);
+  .listen(3008);
