@@ -1,7 +1,6 @@
 node_modules
 
-website.png
-
-output.pdf
+*.png
+*.pdf
 
 .env
