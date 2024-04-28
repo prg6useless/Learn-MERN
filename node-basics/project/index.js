@@ -11,7 +11,6 @@
 const http = require("http");
 require("dotenv").config();
 const gen_QR = require("./modules/qrcodeGenerator");
-const fs = require("fs");
 const gen_PDF = require("./modules/pdfCreator");
 const mail = require("./modules/mailSender");
 
