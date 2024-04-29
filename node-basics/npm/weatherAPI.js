@@ -1,4 +1,5 @@
 const axios = require("axios");
+const moment = require("moment");
 
 const getTemperature = async (url) => {
   //   await axios.get(url).then(function (response) {
@@ -12,23 +13,26 @@ const getTemperature = async (url) => {
   //   const index = data.hourly.time.indexOf("2024-04-29T16:00");
   //   console.log(data.hourly.temperature_2m[index]);
   const {
-    data: { hourly },
+    data: { hourly, daily },
   } = await axios.get(url);
   const { time, temperature_2m } = hourly;
-  const now = new Date().toISOString().split(":")[0].split("T");
-  now[1] = Number(now[1]) + 6;
-  const currentTime = now.join("T").concat(":00");
-  const index = time.indexOf(currentTime);
-  return temperature_2m[index];
+  const { sunrise, sunset } = daily;
+  const today = moment().format("YYYY-MM-DDTHH:00");
+  const index = time.indexOf(today);
+  const temperature = temperature_2m[index];
+  return { temperature, sunrise, sunset };
 };
 
-const myTemparature = await getTemperature(
-  "https://api.open-meteo.com/v1/forecast?latitude=27.70&longitude=85.32&hourly=temperature_2m&daily=sunrise,sunset&forecast_days=1&timezone=auto"
-);
+// getTemperature(
+//   "https://api.open-meteo.com/v1/forecast?latitude=27.70&longitude=85.32&hourly=temperature_2m&daily=sunrise,sunset&forecast_days=1&timezone=auto"
+// ).then((weatherData) => {
+//   const { temperature, sunset, sunrise } = weatherData;
+//   console.log({ temperature, sunrise, sunset });
+// });
 
-console.log(myTemparature);
+module.exports = { getTemperature };
 
-// use package moment to get the current timeas required(2024-04-29T11:00)
+// use package moment to get the current time as required(2024-04-29T11:00)
 // get data sunrise and sunset
 // convert this into module
 
