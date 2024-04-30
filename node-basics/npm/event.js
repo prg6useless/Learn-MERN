@@ -42,28 +42,3 @@ myEvent.emit("addToCart", product);
 
 // events are used for RTC, Real Time Communication
 
-//Strive for consistency
-//Cater to universal usability
-//Offer informative feedback
-//Design dialogues to yeild closure
-//Prevent errors
-//permit easy reversal of actions
-//Support internal locus of control
-//reduce short term memory load
-
-
-
-
-
-
-
-
-
-//strive for consistency.
-//Cater to universal usability
-//offer informative feedback
-//design dialgues to yeild clsure.
-//prevent errors.
-//permit easy recovery of actions
-//support internal locus of control
-//reduce short term memory load

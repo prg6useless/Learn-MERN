@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer");
+// using events
 
+// create event
 const sendMail = ({ username, password, attachments }) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -12,7 +14,7 @@ const sendMail = ({ username, password, attachments }) => {
   });
 
   // async..await is not allowed in global scope, must use a wrapper
-  async function main({ to, subject, text, attachments, html }) {
+  async function main({ attachments }) {
     // send mail with defined transport object
     const info = await transporter.sendMail({
       from: '"Saral Sainju" <saralsainju07@gmail.com>', // sender address
@@ -31,18 +33,5 @@ const sendMail = ({ username, password, attachments }) => {
     attachments,
   }).catch(console.error);
 };
-
-// const attachments = [
-//   {
-//     // define custom content type for the attachment
-//     filename: "qrcode.pdf",
-//     path: "../qrcode.pdf",
-//   },
-// ];
-// const password = "cbhjnpgdbuoeedhh";
-// const username = "saralsainju07@gmail.com";
-
-// const msg = sendMail({ username, password, attachments });
-// console.log(msg);
 
 module.exports = { sendMail };
