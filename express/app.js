@@ -11,3 +11,5 @@ app.get("/", (request, response) => {
 app.listen(port, () => {
   console.log(`Appilcation is running at port ${port}`);
 });
+
+// research about default destructure; destructuring assignment
