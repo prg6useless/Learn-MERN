@@ -1,12 +1,14 @@
 const axios = require("axios");
 const moment = require("moment");
 
+// destructuring assignment = setting a default value to data parameters 
+// in case an api fails to return data
+
 const getTemperature = async (url) => {
-  const {
-    data: { hourly, daily },
-  } = await axios.get(url);
-  const { time, temperature_2m } = hourly;
-  const { sunrise, sunset } = daily;
+  const { data = {} } = await axios.get(url); //destructuring assignment
+  const { hourly = {}, daily = {} } = data; //destructuring assignment
+  const { time = [], temperature_2m = [] } = hourly; //destructuring assignment
+  const { sunrise = [], sunset = [] } = daily; //destructuring assignment
   const today = moment().format("YYYY-MM-DDTHH:00");
   const index = time.indexOf(today);
   const temperature = temperature_2m[index];
