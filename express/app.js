@@ -6,9 +6,19 @@ const port = Number(process.env.PORT);
 
 app.use(express.json()); // ensures use of request.body
 
-app.get("/photos/", (request, response) => {
+const users = [
+  { name: "Saral", age: 25, id: 1 },
+  { name: "Ram", age: 14, id: 2 },
+  { name: "Hari", age: 19, id: 3 },
+];
+app.get("/getUsers/", (request, response) => {
   // client requests data from server
-  response.json({ message: "Request : GET" });
+  console.log({
+    query: request.query, // query starts with ? in the url
+    params: request.params, //":id" -> params
+    body: users, // data comes from middleware
+  });
+  response.json({ allUsers: users });
 });
 
 // header : contenet-type = json
@@ -16,43 +26,56 @@ app.get("/photos/", (request, response) => {
 // body : {message : ...}
 // endpoint : "/"
 
-app.post("/:id", (request, response) => {
-  // client sends data to server
+app.post("/createUsers/:id", (request, response) => {
+  // client sends data to servers
+
   console.log({
     query: request.query, // query starts with ? in the url
     params: request.params, //":id" -> params
-    body: request.body, // data comes from middleware
+    body: users, // data comes from middleware
   });
-  response.json({ message: "Request : POST" });
+  response.json({
+    message: "Request : POST, created new user",
+  });
 });
 
-app.put("/:id", (request, response) => {
+app.put("/changeUsers/:id", (request, response) => {
   // client sends data to server
+  users[0].age = 34;
+  users[0].name = "Killer";
   console.log({
     query: request.query, // query starts with ? in the url
     params: request.params,
-    body: request.body, // data comes from middleware
+    body: users, // data comes from middleware
   });
-  response.json({ message: "Request : PUT" });
+  response.json({
+    message: `Request : PUT, changed user's age to ${users[0].age}, user's name to ${users[0].name}`,
+  });
 });
 
-app.patch("/", (request, response) => {
+app.patch("/patchUsers/:id", (request, response) => {
   // client sends data to server
+  users[2].id = 5;
   console.log({
     query: request.query, // query starts with ? in the url
     params: request.params,
-    body: request.body, // data comes from middleware
+    body: users, // data comes from middleware
   });
-  response.json({ message: "Request : PATCH" });
+  response.json({
+    message: `Request : PATCH, changed user's id to ${users[2].id}`,
+  });
 });
 
-app.delete("/", (request, response) => {
+app.delete("/deleteUser", (request, response) => {
+  const newUsers = users.filter((item) => item.name != "Ram");
   console.log({
     query: request.query, // query starts with ? in the url
     params: request.params,
-    body: request.body, // data comes from middleware
+    body: newUsers, // data comes from middleware
   });
-  response.json({ message: "Request : DELETE" });
+  response.json({
+    message: "Request : DELETE, user deleted",
+  });
 });
 
 app.listen(port, () => {
