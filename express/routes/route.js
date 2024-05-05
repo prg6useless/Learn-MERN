@@ -7,23 +7,7 @@ const statusRouter = require("./status");
 const roleRouter = require("./role");
 const deleteRouter = require("./remove");
 
-const users = [
-  {
-    name: "Saral",
-    password: "saral123",
-    id: 1,
-    isActive: false,
-    role: "client",
-  },
-  { name: "Ram", password: "ram123", id: 2, isActive: false, role: "client" },
-  {
-    name: "Hari",
-    password: "hari123",
-    id: 3,
-    isActive: false,
-    role: "client",
-  },
-];
+const users = require("./data");
 
 router.get("/", (request, response) => {
   // client requests data from server
