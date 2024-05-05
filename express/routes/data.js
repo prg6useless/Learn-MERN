@@ -18,7 +18,7 @@ const users = [
     name: "goivinda",
     password: "gov123",
     id: 4,
-    isActive: true,
+    isActive: false,
     role: "client",
   },
 ];

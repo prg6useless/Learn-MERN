@@ -19,16 +19,16 @@ router.get("/", (request, response) => {
   response.json({ users });
 });
 
+// header : contenet-type = json
+// method : get
+// body : {users}
+// endpoint : "/"
+
 router.use("/users", userRouter);
 router.use("/update", updateUserRouter);
 router.use("/password", passwordRouter);
 router.use("/status", statusRouter);
 router.use("/role", roleRouter);
 router.use("/remove", deleteRouter);
-
-// header : contenet-type = json
-// method : get
-// body : {message : ...}
-// endpoint : "/"
 
 module.exports = router;
