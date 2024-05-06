@@ -8,3 +8,5 @@ SoC PRINCIPLE
 
 Seperation of Concern
 
+MVC Pattern
+Model View(API) Controller

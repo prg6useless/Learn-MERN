@@ -1,38 +1,20 @@
 const express = require("express");
 const router = express.Router();
+const movieRouter = require("../modules/movies/movie.api");
+const orderRouter = require("../modules/orders/order.api");
 
 // we use express middleware to handle errors
 // two types of error :
 // application level error and routing level error
-
-//register user
-router.post("/register", (request, response, next) => {
+router.get("/api/v1", (req, res, next) => {
   try {
-    const { username, email, password } = request.body;
-    console.log({ username, email, password });
-    // exception handling
-    // if (email !== "saral@gmail.com" || password !== "sara123") {
-    //   throw new Error("Invalid credentials");
-    // }
-    response.json({ msg: "register successful" });
-  } catch (error) {
-    next(error); // sends control flow/ error to app.js
+    res.json({ msg: "MovieMate API is working" });
+  } catch (e) {
+    next(e);
   }
 });
 
-//login user
-router.post("/login", (request, response, next) => {
-  try {
-    const { email, password } = request.body;
-    console.log({ email, password });
-    // exception handling
-    if (email !== "saral@gmail.com" || password !== "sara123") {
-      throw new Error("Invalid credentials");
-    }
-    response.json({ msg: "login" });
-  } catch (error) {
-    next(error); // sends control flow or the error to app.js
-  }
-});
+router.use("/api/v1/movies", movieRouter);
+router.use("/api/v1/orders", orderRouter);
 
 module.exports = router;
