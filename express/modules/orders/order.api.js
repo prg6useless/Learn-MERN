@@ -1,7 +1,5 @@
 const router = require("express").Router();
 
-let Orders = [];
-
 // create new order
 router.post("/", (req, res, next) => {
   try {
