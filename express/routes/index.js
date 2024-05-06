@@ -31,7 +31,7 @@ router.post("/login", (request, response, next) => {
     }
     response.json({ msg: "login" });
   } catch (error) {
-    next(error); // sends control flow/ error to app.js
+    next(error); // sends control flow or the error to app.js
   }
 });
 

@@ -19,11 +19,6 @@ router.get("/", (request, response) => {
   response.json({ users });
 });
 
-// header : contenet-type = json
-// method : get
-// body : {users}
-// endpoint : "/"
-
 router.use("/users", userRouter);
 router.use("/update", updateUserRouter);
 router.use("/password", passwordRouter);
