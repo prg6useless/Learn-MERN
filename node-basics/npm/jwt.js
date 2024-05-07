@@ -16,5 +16,3 @@ const verifyToken = (token) => jwt.verify(token, process.env.JWT_KEY);
 // console.log(dataOfToken);
 
 module.exports = { createToken, verifyToken };
-
-
