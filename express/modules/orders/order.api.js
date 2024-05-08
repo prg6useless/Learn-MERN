@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { roleMiddleWare } = require("../../utils/secure");
 
 const middleWare = (req, res, next) => {
   //route level middleware
@@ -23,16 +24,8 @@ router.post("/", (req, res, next) => {
   }
 });
 
-const roleMiddleWare = (req, res, next) => {
-  const { role } = req.headers;
-  if (role === "admin") {
-    next();
-  }
-  res.status(404).json({ msg: "User Unauthorized" });
-};
-
 // get all orders
-router.get("/", middleWare, roleMiddleWare, (req, res, next) => {
+router.get("/", roleMiddleWare(["admin", "client"]), (req, res, next) => {
   try {
     res.json({ msg: "All orders", data: req.body }); // req.body arriving from application level middleware
   } catch (e) {
