@@ -149,7 +149,7 @@ router.patch("/:id/role", (request, response) => {
   if (matchId === -1) return response.json({ error: "User not Found" });
   users[matchId].role = role;
 
-  response.json({ msg: " updated role", users });
+  response.json({ msg: "updated role", users });
 });
 
 //change user status
@@ -160,7 +160,7 @@ router.patch("/:id/status", (request, response) => {
   if (matchId === -1) return response.json({ error: "User not Found" });
   users[matchId].isActive = !users[matchId].isActive;
 
-  response.json({ msg: " updated status", users });
+  response.json({ msg: "updated status", users });
 });
 
 // delete user

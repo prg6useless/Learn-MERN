@@ -7,6 +7,16 @@ const port = Number(process.env.PORT);
 
 // allows tha parsing of request body as json
 app.use(express.json());
+
+// this is our application level; custom middleware
+
+app.use((req, res, next) => {
+  req.body.country = "Nepal";
+  req.body.currency = "NPR";
+  req.body.currentTime = new Date().toISOString();
+  next();
+});
+
 app.use("/", route);
 
 // comes here from next() during error
