@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const auth = require("../../utils/auth");
+const { createToken } = require("../../utils/secure");
 const role = require("../../utils/secure");
 const sysRole = ["admin", "manager"];
 const users = require("./data");
@@ -38,46 +38,40 @@ router.post("/register", (request, response, next) => {
   }
 });
 
-let globalToken;
-
 //login user
 router.post("/login", (request, response, next) => {
   try {
     const { name, password } = request.body;
-    console.log({ name, password });
-    const myToken = auth.createToken({ name, password });
-    globalToken = myToken;
-    // exception handling
-    // if (name !== "Saral" || password !== "sara123") {
-    //   throw new Error("Invalid credentials");
-    // }
-    response.json({ msg: "login success", token: myToken });
+    if (name === "Saral" && password === "Saral123") {
+      const myToken = createToken({ name, password });
+      response.json({ msg: "login success", token: myToken });
+    } else response.json({ msg: "User Details incorrect" });
   } catch (error) {
     next(error); // sends control flow or the error to app.js
   }
 });
 
 // verify token
-router.get("/:id/verify", (req, res, next) => {
-  try {
-    const { id } = req.params;
-    console.log(globalToken);
-    const verifiedData = auth.verifyToken(globalToken);
-    let isVerified =
-      verifiedData.name === users[id - 1].name &&
-      verifiedData.password === users[id - 1].password
-        ? true
-        : false;
+// router.get("/:id/verify", (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+//     console.log(globalToken);
+//     const verifiedData = auth.verifyToken(globalToken);
+//     let isVerified =
+//       verifiedData.name === users[id - 1].name &&
+//       verifiedData.password === users[id - 1].password
+//         ? true
+//         : false;
 
-    res.json({
-      msg: `User ${id}`,
-      user: users[id - 1],
-      isVerified,
-    });
-  } catch (e) {
-    next(e);
-  }
-});
+//     res.json({
+//       msg: `User ${id}`,
+//       user: users[id - 1],
+//       isVerified,
+//     });
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 // change user details
 router.put("/:id", (request, response) => {
@@ -136,8 +130,9 @@ router.get("/:id/check-role", (request, response) => {
   const { id } = request.params;
   const matchId = users.findIndex((item) => item.id === Number(id));
   if (matchId === -1) return response.json({ error: "User not Found" });
-  const myRole = role(users[matchId].role, sysRole);
-  response.json({ msg: `${myRole} user role is ${users[matchId].role}` });
+  // const myRole = role(users[matchId].role, sysRole);
+  // response.json({ msg: `${myRole} user role is ${users[matchId].role}` });
+  response.json({ msg: "User role is :" });
 });
 
 //change user role

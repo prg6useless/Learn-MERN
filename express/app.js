@@ -13,7 +13,6 @@ app.use(express.json());
 app.use((req, res, next) => {
   req.body.country = "Nepal";
   req.body.currency = "NPR";
-  req.body.currentTime = new Date().toISOString();
   next();
 });
 
@@ -23,7 +22,7 @@ app.use("/", route);
 // Error Handling
 app.use((err, req, res, next) => {
   const errorMsg = err ? err.toString() : "Something went wrong";
-  res.status(500).json({ msgg: errorMsg });
+  res.status(500).json({ msg: errorMsg });
 });
 
 app.listen(port, () => {
