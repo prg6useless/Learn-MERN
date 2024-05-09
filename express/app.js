@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 app.use("/", route);
 
 // comes here from next() during error
-// Error Handling
+// Error Handling Middleware
 app.use((err, req, res, next) => {
   const errorMsg = err ? err.toString() : "Something went wrong";
   res.status(500).json({ msg: errorMsg });

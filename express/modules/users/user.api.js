@@ -1,11 +1,10 @@
 const router = require("express").Router();
-const { createToken } = require("../../utils/secure");
-const role = require("../../utils/secure");
-const sysRole = ["admin", "manager"];
+const { signToken, verifyToken } = require("../../utils/token");
+const { roleMiddleWare } = require("../../utils/secure");
 const users = require("./data");
 
 //get all users
-router.get("/", (req, res, next) => {
+router.get("/", roleMiddleWare(["admin"]), (req, res, next) => {
   try {
     res.json({ msg: "All users", users });
   } catch (e) {
@@ -28,6 +27,7 @@ router.post("/register", (request, response, next) => {
   try {
     const { username, email, password } = request.body;
     console.log({ username, email, password });
+    // send email to the specified email using nodemailer and events
     // exception handling
     // if (email !== "saral@gmail.com" || password !== "sara123") {
     //   throw new Error("Invalid credentials");
@@ -42,10 +42,18 @@ router.post("/register", (request, response, next) => {
 router.post("/login", (request, response, next) => {
   try {
     const { name, password } = request.body;
+    if (!name || !password) throw new Error("Email or password is missing");
     if (name === "Saral" && password === "Saral123") {
-      const myToken = createToken({ name, password });
-      response.json({ msg: "login success", token: myToken });
-    } else response.json({ msg: "User Details incorrect" });
+      const payload = {
+        name,
+        password,
+        roles: ["admin"],
+      };
+      const myToken = signToken(payload);
+      return response.json({ msg: "login success", token: myToken });
+    }
+    // response.status(400).json({ msg: "User Details incorrect" });
+    throw new Error("Invalid credentials");
   } catch (error) {
     next(error); // sends control flow or the error to app.js
   }
