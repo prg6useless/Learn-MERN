@@ -1,4 +1,5 @@
 // check role module
+// RBAC - role based access control
 
 const { checkRole, verifyToken } = require("./token");
 
@@ -19,17 +20,6 @@ const roleMiddleWare = (sysRole) => {
   };
 };
 
-// jwt user login middleware
-
-// const tokenMiddleware = (req, res, next) => {
-//   //route level middleware
-//   const { token } = req.headers;
-//   const result = verifyToken(token);
-//   if (!result) res.status(400).json({ msg: "User Authentication Failed" });
-//   next();
-// };
-
 module.exports = {
   roleMiddleWare,
-  // tokenMiddleware,
 };
