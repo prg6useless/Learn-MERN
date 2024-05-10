@@ -1,6 +1,11 @@
 const router = require("express").Router();
 const { signToken, verifyToken } = require("../../utils/token");
 const { roleMiddleWare } = require("../../utils/secure");
+const { sendMail } = require("../../services/email");
+
+const event = require("events");
+const myEvent = new event.EventEmitter();
+
 const users = require("./data");
 
 //get all users
@@ -32,6 +37,12 @@ router.post("/register", (request, response, next) => {
     // if (email !== "saral@gmail.com" || password !== "sara123") {
     //   throw new Error("Invalid credentials");
     // }
+    // fire the event
+    myEvent.on("sendMail", (email) => {
+      sendMail(email);
+      console.log("Message Sent");
+    });
+    myEvent.emit("sendMail", email);
     response.json({ msg: "register successful" });
   } catch (error) {
     next(error); // sends control flow/ error to app.js
