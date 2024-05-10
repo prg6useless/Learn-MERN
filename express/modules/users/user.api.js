@@ -6,7 +6,17 @@ const { sendMail } = require("../../services/email");
 const event = require("events");
 const myEvent = new event.EventEmitter();
 
+const { validator } = require("./user.validator");
+
 const users = require("./data");
+
+myEvent.addListener("sendMail", (email) => {
+  sendMail({
+    email,
+    subject: "Signing up in Movie Mate",
+    html: "<b>Thank you for signing up to Movie Mate</b>",
+  });
+});
 
 //get all users
 router.get("/", roleMiddleWare(["admin"]), (req, res, next) => {
@@ -28,20 +38,14 @@ router.get("/:id", (req, res, next) => {
 });
 
 //register user
-router.post("/register", (request, response, next) => {
+router.post("/register", validator, (request, response, next) => {
   try {
     const { username, email, password } = request.body;
-    console.log({ username, email, password });
-    // send email to the specified email using nodemailer and events
     // exception handling
     // if (email !== "saral@gmail.com" || password !== "sara123") {
     //   throw new Error("Invalid credentials");
     // }
     // fire the event
-    myEvent.on("sendMail", (email) => {
-      sendMail(email);
-      console.log("Message Sent");
-    });
     myEvent.emit("sendMail", email);
     response.json({ msg: "register successful" });
   } catch (error) {

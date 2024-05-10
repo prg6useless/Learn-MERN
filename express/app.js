@@ -10,11 +10,11 @@ app.use(express.json());
 
 // this is our application level; custom middleware
 
-app.use((req, res, next) => {
-  req.body.country = "Nepal";
-  req.body.currency = "NPR";
-  next();
-});
+// app.use((req, res, next) => {
+//   req.body.country = "Nepal";
+//   req.body.currency = "NPR";
+//   next();
+// });
 
 app.use("/", route);
 
