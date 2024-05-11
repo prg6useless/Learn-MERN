@@ -1,10 +1,9 @@
 const router = require("express").Router();
-const data = require("./movieData");
 
 // get all movies
 router.get("/", (req, res, next) => {
   try {
-    res.json({ data });
+    res.json({ msg : "All Movies" });
   } catch (e) {
     next(e);
   }
