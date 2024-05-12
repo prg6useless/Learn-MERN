@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use("/", route);
 
-// comes here from next() during error
+// comes here from next(e) during error
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   const errorMsg = err ? err.toString() : "Something went wrong";

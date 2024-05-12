@@ -1,16 +1,18 @@
 const router = require("express").Router();
 
+const { roleMiddleWare } = require("../../utils/secure");
+
 // get all movies
 router.get("/", (req, res, next) => {
   try {
-    res.json({ msg : "All Movies" });
+    res.json({ msg: "All Movies" });
   } catch (e) {
     next(e);
   }
 });
 
 // create new movie
-router.post("/", (req, res, next) => {
+router.post("/", roleMiddleWare(["admin"]), (req, res, next) => {
   try {
     const { movieName, quantity } = req.body;
     res.json({ msg: "movie Created" });
