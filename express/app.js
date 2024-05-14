@@ -1,6 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const route = require("./routes/index");
+const morgan = require("morgan");
 
 const app = express();
 const port = Number(process.env.PORT);
@@ -15,7 +16,7 @@ app.use(express.json());
 //   req.body.currency = "NPR";
 //   next();
 // });
-
+app.use(morgan("combined"));
 app.use("/", route);
 
 // comes here from next(e) during error
