@@ -17,7 +17,7 @@ Model View(API) Controller
 2. Error Handling
 3. DB connection
 4. Env variable
-5. API  versioning
+5. API versioning
 6. Services (gmail,google recaptcha)
 7. Utils
 8. Validation
@@ -31,3 +31,5 @@ Model View(API) Controller
 3. Advanced Logging
 4. Rate Limiting
 
+Nesting of Callbacks is called Callback Hell
+Express handled Callback Hell by introducing the next() function

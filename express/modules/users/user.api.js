@@ -6,7 +6,32 @@ const { sendMail } = require("../../services/email");
 const event = require("events");
 const myEvent = new event.EventEmitter();
 
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/upload");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname.concat(
+        "-",
+        Date.now(),
+        ".",
+        file.originalname.split(".")[1]
+      )
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 }, // in bytes (1 MB = 1000000 bytes)
+});
+
 const { validator } = require("./user.validator");
+
+// add file size limit; limit to 1 MB
 
 const users = require("./data");
 
@@ -38,20 +63,25 @@ router.get("/:id", (req, res, next) => {
 });
 
 //register user
-router.post("/register", validator, (request, response, next) => {
-  try {
-    const { username, email, password } = request.body;
-    // exception handling
-    // if (email !== "saral@gmail.com" || password !== "sara123") {
-    //   throw new Error("Invalid credentials");
-    // }
-    // fire the event
-    myEvent.emit("sendMail", email);
-    response.json({ msg: "register successful" });
-  } catch (error) {
-    next(error); // sends control flow/ error to app.js
+router.post(
+  "/register",
+  upload.single("profile"),
+  validator,
+  (request, response, next) => {
+    try {
+      const { username, email, password } = request.body;
+      // exception handling
+      // if (email !== "saral@gmail.com" || password !== "sara123") {
+      //   throw new Error("Invalid credentials");
+      // }
+      // fire the event
+      myEvent.emit("sendMail", email);
+      response.json({ msg: "register successful" });
+    } catch (error) {
+      next(error); // sends control flow/ error to app.js
+    }
   }
-});
+);
 
 //login user
 router.post("/login", (request, response, next) => {

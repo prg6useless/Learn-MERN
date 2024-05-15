@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const app = express();
 const port = Number(process.env.PORT);
 
+const mongoose = require("mongoose");
+
 // allows tha parsing of request body as json
 app.use(express.json());
 
@@ -16,8 +18,21 @@ app.use(express.json());
 //   req.body.currency = "NPR";
 //   next();
 // });
+
 app.use(morgan("combined"));
 app.use("/", route);
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Database connected successfully");
+  })
+  .catch((error) => {
+    console.log("Database Error", error);
+  });
+
+app.use("/assets", express.static("public")); // static files
+// http://localhost:8000/assets/pdf/hello.txt
 
 // comes here from next(e) during error
 // Error Handling Middleware
