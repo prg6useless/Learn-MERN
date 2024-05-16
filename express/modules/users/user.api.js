@@ -3,6 +3,8 @@ const { signToken, verifyToken } = require("../../utils/token");
 const { roleMiddleWare } = require("../../utils/secure");
 const { sendMail } = require("../../services/email");
 
+const userController = require("./user.controller");
+
 const event = require("events");
 const myEvent = new event.EventEmitter();
 
@@ -33,8 +35,6 @@ const { validator } = require("./user.validator");
 
 // add file size limit; limit to 1 MB
 
-const users = require("./data");
-
 myEvent.addListener("sendMail", (email) => {
   sendMail({
     email,
@@ -46,7 +46,7 @@ myEvent.addListener("sendMail", (email) => {
 //get all users
 router.get("/", roleMiddleWare(["admin"]), (req, res, next) => {
   try {
-    res.json({ msg: "All users", users });
+    res.json({ msg: "All users" });
   } catch (e) {
     next(e);
   }
@@ -56,7 +56,7 @@ router.get("/", roleMiddleWare(["admin"]), (req, res, next) => {
 router.get("/:id", (req, res, next) => {
   try {
     const { id } = req.params;
-    res.json({ msg: `User ${id}`, user: users[id - 1] });
+    res.json({ msg: `User ${id}` });
   } catch (e) {
     next(e);
   }
@@ -132,16 +132,16 @@ router.put("/:id", (request, response) => {
   const { id } = request.params;
   const { name, password } = request.body;
 
-  const matchId = users.findIndex((item) => item.id === Number(id));
-  if (matchId === -1) return response.json({ error: "User not Found" });
-  users[matchId] = { ...users[matchId], name, password };
+  // const matchId = users.findIndex((item) => item.id === Number(id));
+  // if (matchId === -1) return response.json({ error: "User not Found" });
+  // users[matchId] = { ...users[matchId], name, password };
 
   console.log({
     query: request.query, // query starts with ? in the url
     params: request.params, //":id" -> params
     body: request.body, // data comes from middleware
   });
-  response.json(users);
+  response.json({ msg: "cahnged user details" });
 });
 
 //forget password
@@ -150,13 +150,12 @@ router.patch("/:id/forgot-password", (request, response) => {
   // user email or username verification first
   const { password } = request.body;
 
-  const matchId = users.findIndex((item) => item.id === Number(id));
-  if (matchId === -1) return response.json({ error: "User not Found" });
-  users[matchId] = { ...users[matchId], password };
+  // const matchId = users.findIndex((item) => item.id === Number(id));
+  // if (matchId === -1) return response.json({ error: "User not Found" });
+  // users[matchId] = { ...users[matchId], password };
 
   response.json({
     msg: "password changed, you can now login with this new password",
-    users,
   });
 });
 
@@ -167,22 +166,22 @@ router.patch("/:id/change-password", (request, response) => {
   const { id } = request.params;
   const { password } = request.body;
 
-  const matchId = users.findIndex((item) => item.id === Number(id));
-  if (matchId === -1) return response.json({ error: "User not Found" });
-  if (password === users[matchId].password)
-    return response.json({
-      error: "new password cant be same as old password",
-    });
-  users[matchId] = { ...users[matchId], password };
+  // const matchId = users.findIndex((item) => item.id === Number(id));
+  // if (matchId === -1) return response.json({ error: "User not Found" });
+  // if (password === users[matchId].password)
+  //   return response.json({
+  //     error: "new password cant be same as old password",
+  //   });
+  // users[matchId] = { ...users[matchId], password };
 
-  response.json({ msg: "password changed", users });
+  response.json({ msg: "password changed" });
 });
 
 // check user role
 router.get("/:id/check-role", (request, response) => {
   const { id } = request.params;
-  const matchId = users.findIndex((item) => item.id === Number(id));
-  if (matchId === -1) return response.json({ error: "User not Found" });
+  // const matchId = users.findIndex((item) => item.id === Number(id));
+  // if (matchId === -1) return response.json({ error: "User not Found" });
   // const myRole = role(users[matchId].role, sysRole);
   // response.json({ msg: `${myRole} user role is ${users[matchId].role}` });
   response.json({ msg: "User role is :" });
@@ -193,33 +192,33 @@ router.patch("/:id/role", (request, response) => {
   const { id } = request.params;
   const { role } = request.body;
 
-  const matchId = users.findIndex((item) => item.id === Number(id));
-  if (matchId === -1) return response.json({ error: "User not Found" });
-  users[matchId].role = role;
+  // const matchId = users.findIndex((item) => item.id === Number(id));
+  // if (matchId === -1) return response.json({ error: "User not Found" });
+  // users[matchId].role = role;
 
-  response.json({ msg: "updated role", users });
+  response.json({ msg: "updated role" });
 });
 
 //change user status
 router.patch("/:id/status", (request, response) => {
   const { id } = request.params;
 
-  const matchId = users.findIndex((item) => item.id === Number(id));
-  if (matchId === -1) return response.json({ error: "User not Found" });
-  users[matchId].isActive = !users[matchId].isActive;
+  // const matchId = users.findIndex((item) => item.id === Number(id));
+  // if (matchId === -1) return response.json({ error: "User not Found" });
+  // users[matchId].isActive = !users[matchId].isActive;
 
-  response.json({ msg: "updated status", users });
+  response.json({ msg: "updated status" });
 });
 
 // delete user
 router.delete("/:id/delete", (request, response) => {
   const { id } = request.params;
 
-  const matchId = users.findIndex((item) => item.id === Number(id));
-  if (matchId === -1) return response.json({ error: "User not Found" });
-  const newUsers = users.filter((item) => item.id != Number(id));
+  // const matchId = users.findIndex((item) => item.id === Number(id));
+  // if (matchId === -1) return response.json({ error: "User not Found" });
+  // const newUsers = users.filter((item) => item.id != Number(id));
 
-  response.json({ msg: "user removed", newUsers });
+  response.json({ msg: "user removed" });
 });
 
 module.exports = router;

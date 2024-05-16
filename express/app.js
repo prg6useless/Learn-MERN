@@ -22,6 +22,7 @@ app.use(express.json());
 app.use(morgan("combined"));
 app.use("/", route);
 
+// database connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {

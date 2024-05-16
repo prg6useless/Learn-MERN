@@ -1,10 +1,18 @@
 const Joi = require("joi");
 
 const schema = Joi.object({
-  email: Joi.string().email({
-    minDomainSegments: 2,
-    tlds: { allow: ["com", "net"] },
-  }).required(),
+  name: Joi.string().required(),
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: ["com"] },
+    })
+    .required(),
+  password: Joi.string().required(),
+  roles: Joi.array().items(Joi.string().valid("admin", "user")),
+  image: Joi.string(),
+  isVerified: Joi.boolean(),
+  isActive: Joi.boolean(),
 });
 
 // middleware definition
