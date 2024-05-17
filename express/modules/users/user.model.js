@@ -16,7 +16,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       unique: true,
-      require: true,
+      required: true,
       // validate: {
       //   validator: (v) => {
       //     return /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(v);
@@ -25,19 +25,19 @@ const userSchema = new Schema(
       // },
     },
     password: { type: String, required: true },
-    roles: [
-      {
-        type: String,
-        enum: ["admin", "user"],
-        default: "user",
-        required: true,
-      },
-    ],
+    roles: {
+      type: Array,
+      default: ["user"],
+      required: true,
+    },
     image: { type: String },
     isActive: { type: Boolean, required: true, default: true },
+    otp: { type: String },
     isEmailVerified: { type: Boolean, required: true, default: false },
   },
   { timestamps: true }
 );
 
 module.exports = model("User", userSchema);
+
+// Schema + Validation = Model

@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+const crypto = require("crypto");
+
 const signToken = (payload) =>
   jwt.sign(
     {
@@ -15,4 +17,6 @@ const verifyToken = (token) => jwt.verify(token, process.env.JWT_KEY);
 const checkRole = ({ userRole, sysRole }) =>
   userRole.some((item) => sysRole.includes(item));
 
-module.exports = { signToken, verifyToken, checkRole };
+const generateOTP = () => crypto.randomInt(100000, 999999);
+
+module.exports = { signToken, verifyToken, checkRole, generateOTP };

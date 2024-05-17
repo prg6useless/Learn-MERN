@@ -18,8 +18,8 @@ const schema = Joi.object({
 // middleware definition
 const validator = async (req, res, next) => {
   try {
-    const { email } = req.body;
-    await schema.validateAsync({ email });
+    const { name, email, password } = req.body;
+    await schema.validateAsync({ name,password,email });
     next();
   } catch (error) {
     next(error);
