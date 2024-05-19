@@ -13,10 +13,6 @@ const middleWare = (req, res, next) => {
 router.post("/", (req, res, next) => {
   try {
     const { movieName, quantity } = req.body;
-    // const id = Orders.length + 1;
-    // const newOrders = { movieName, quantity, id };
-    // Orders = [...Orders, newOrders];
-    // console.log({ Orders });
     res.json({ msg: "Order Created" });
   } catch (e) {
     next(e);

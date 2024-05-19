@@ -1,5 +1,7 @@
+// day 36 - User CRUD Operations
+
 const router = require("express").Router();
-const { roleMiddleWare } = require("../../utils/secure");
+const { secureMiddleWare } = require("../../utils/secure");
 const { validator } = require("./user.validator");
 
 const userController = require("./user.controller");
@@ -76,8 +78,56 @@ router.post("/verify-email", async (request, response, next) => {
   }
 });
 
+// Day 37 - User Profile and Role Checks
 //get all users
-router.get("/", roleMiddleWare(["admin"]), (req, res, next) => {
+router.get("/", secureMiddleWare(["admin"]), async (req, res, next) => {
+  try {
+    // advanced operations required
+    const data = await userController.list();
+    res.json({ msg: "All users", data });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// block a user (by admin) set isActive:false
+router.patch(
+  "/:id/block",
+  secureMiddleWare(["admin"]),
+  async (req, res, next) => {
+    try {
+      const result = await userController.blockUser(req.params.id);
+      res.json({ msg: "User status updated successfully", data: result });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// delete a user
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const result = await userController.removeById(req.params.id);
+    res.json({ msg: "Deleted User", data: result });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// get profile
+router.get("/profile", secureMiddleWare(), async (req, res, next) => {
+  try {
+    const result = await userController.getProfile(req.currentUser);
+    res.json({ msg: "User Profile Generated", data: result });
+  } catch (e) {
+    next(e);
+  }
+});
+// ----------------------------------
+
+// Day 38
+// update profile
+router.put("/profile", secureMiddleWare(["admin"]), (req, res, next) => {
   try {
     res.json({ msg: "All users" });
   } catch (e) {
@@ -85,4 +135,46 @@ router.get("/", roleMiddleWare(["admin"]), (req, res, next) => {
   }
 });
 
+router.get("/:id", secureMiddleWare(["admin"]), (req, res, next) => {
+  try {
+    res.json({ msg: "All users" });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// change password
+router.post(
+  "/change-password",
+  secureMiddleWare(["admin"]),
+  (req, res, next) => {
+    try {
+      res.json({ msg: "All users" });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// reset password (by admin)
+router.post(
+  "/reset-password",
+  secureMiddleWare(["admin"]),
+  (req, res, next) => {
+    try {
+      res.json({ msg: "All users" });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+// forget password
+router.post("/forget-password", async (req, res, next) => {
+  try {
+    res.json({ msg: "All users" });
+  } catch (e) {
+    next(e);
+  }
+});
 module.exports = router;

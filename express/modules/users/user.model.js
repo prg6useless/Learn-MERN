@@ -24,7 +24,7 @@ const userSchema = new Schema(
       //   message :(props)=> `${props.value} is not a valid email`
       // },
     },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false }, // select : false indicates when select operation, password is not returned
     roles: {
       type: Array,
       default: ["user"],

@@ -33,7 +33,9 @@ const create = async (payload) => {
 
 const login = async (payload) => {
   const { email, password } = payload;
-  const user = await userModel.findOne({ email, isActive: true });
+  const user = await userModel
+    .findOne({ email, isActive: true })
+    .select("+password"); // return password too, since model is defined to not return password
   if (!user) throw new Error("User not found");
   const isVerified = user?.isEmailVerified;
   if (!isVerified) throw new Error("Email is not verified");
@@ -41,7 +43,7 @@ const login = async (payload) => {
   if (!checkPassword) throw new Error("Email or Password is incorrect");
   const tokenPaylaod = {
     name: user?.name,
-    roles: user?.roles,
+    email,
   };
   const Token = signToken(tokenPaylaod);
   if (!Token) throw new Error("Something went wrong");
@@ -79,12 +81,30 @@ const verifyEmail = async (payload) => {
   return validOTP;
 };
 
-const getById = (id) => {
-  return userModel.findOne({ _id: id }); //_id-> of database
+const list = async () => {
+  return await userModel.find();
 };
 
-const list = () => {
-  return userModel.find();
+const blockUser = async (payload) => {
+  const user = await userModel.findOne({ _id: payload });
+  if (!user) throw new Error("User not found");
+  const statusPayload = {
+    isActive: !user?.isActive,
+  };
+  const updatedUser = await userModel.updateOne(
+    { _id: payload },
+    statusPayload
+  );
+  if (!updatedUser) throw new Error("Something went wrong");
+  return true;
+};
+
+const getProfile = (id) => {
+  return userModel.findOne({ _id: id });
+};
+
+const getById = (id) => {
+  return userModel.findOne({ _id: id }); //_id-> of database
 };
 
 const updateById = (id, payload) => {
@@ -100,8 +120,10 @@ module.exports = {
   login,
   generateToken,
   verifyEmail,
+  blockUser,
   getById,
   list,
+  getProfile,
   updateById,
   removeById,
 };

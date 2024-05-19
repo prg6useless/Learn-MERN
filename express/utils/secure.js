@@ -1,10 +1,11 @@
 // check role module
 // RBAC - role based access control
 
+const userModel = require("../modules/users/user.model");
 const { checkRole, verifyToken } = require("./token");
 
-const roleMiddleWare = (sysRole) => {
-  return (req, res, next) => {
+const secureMiddleWare = (sysRole = []) => {
+  return async (req, res, next) => {
     //route level middleware
     const { token } = req.headers;
     // no token ?
@@ -14,12 +15,21 @@ const roleMiddleWare = (sysRole) => {
     // token expired?
     if (!isValid) throw new Error("Token expired");
     const { data } = isValid;
-    const validRole = checkRole({ sysRole, userRole: data?.roles || [] });
+    const userInfo = await userModel.findOne({
+      email: data?.email,
+      isActive: true,
+      isEmailVerified: true,
+    });
+    if (!userInfo) throw new Error("user not found");
+    const validRole = checkRole({ sysRole, userRole: userInfo?.roles || [] });
     if (!validRole) throw new Error("User Unauthorized");
+    req.currentUser = userInfo?._id;
     next();
   };
 };
 
 module.exports = {
-  roleMiddleWare,
+  secureMiddleWare,
 };
+
+// RBAC vs PBAC vs ABAC
