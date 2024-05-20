@@ -103,12 +103,12 @@ const getProfile = (id) => {
   return userModel.findOne({ _id: id });
 };
 
-const getById = (id) => {
-  return userModel.findOne({ _id: id }); //_id-> of database
+const updateById = async (id, payload) => {
+  return userModel.findOneAndUpdate({ _id: id }, payload, { new: true }); // {new : true} immediately return updated data
 };
 
-const updateById = (id, payload) => {
-  return userModel.updateOne({ _id: id }, payload);
+const getById = async (id) => {
+  return userModel.findOne({ _id: id }); //_id-> of database
 };
 
 const removeById = (id) => {

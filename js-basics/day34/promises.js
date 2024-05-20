@@ -29,3 +29,11 @@ promise
   });
 
 // arises to promise chaining, solution => async/await
+
+let x = {},
+  y = { name: "Saral" },
+  z = { name: "Hina" };
+
+x[y] = { name: "Kubo" };
+x[z] = { name: "Yuu" };
+console.log(x[y]);
