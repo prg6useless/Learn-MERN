@@ -14,8 +14,8 @@ const signToken = (payload) =>
 
 const verifyToken = (token) => jwt.verify(token, process.env.JWT_KEY);
 
-const checkRole = ({ userRole, sysRole }) =>
-  sysRole.length === 0 ? true : userRole.some((item) => sysRole.includes(item));
+const checkRole = ({ sysRole, userRole }) =>
+  sysRole.length === 0 ? true : sysRole.some((item) => userRole.includes(item));
 
 const generateOTP = () => crypto.randomInt(100000, 999999);
 

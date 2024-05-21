@@ -1,6 +1,6 @@
 const userModel = require("./user.model");
 const { generateHash, compareHash } = require("../../utils/hash");
-const { signToken, verifyToken, generateOTP } = require("../../utils/token");
+const { signToken, generateOTP } = require("../../utils/token");
 
 const event = require("events");
 const { EventEmitter } = require("stream");
@@ -28,7 +28,7 @@ const create = async (payload) => {
   const { email, password } = payload;
   payload.password = generateHash(password);
   myEvent.emit("sendMail", email);
-  return userModel.create(payload);
+  return await userModel.create(payload);
 };
 
 const login = async (payload) => {
@@ -43,7 +43,7 @@ const login = async (payload) => {
   if (!checkPassword) throw new Error("Email or Password is incorrect");
   const tokenPaylaod = {
     name: user?.name,
-    email,
+    email: user?.email,
   };
   const Token = signToken(tokenPaylaod);
   if (!Token) throw new Error("Something went wrong");
@@ -99,8 +99,12 @@ const blockUser = async (payload) => {
   return true;
 };
 
-const getProfile = (id) => {
-  return userModel.findOne({ _id: id });
+const removeById = (id) => {
+  return userModel.deleteOne({ _id: id });
+};
+
+const getProfile = (_id) => {
+  return userModel.findOne({ _id });
 };
 
 const updateById = async (id, payload) => {
@@ -109,10 +113,6 @@ const updateById = async (id, payload) => {
 
 const getById = async (id) => {
   return userModel.findOne({ _id: id }); //_id-> of database
-};
-
-const removeById = (id) => {
-  return userModel.deleteOne({ _id: id });
 };
 
 module.exports = {

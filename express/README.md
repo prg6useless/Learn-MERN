@@ -34,10 +34,12 @@ Model View(API) Controller
 Nesting of Callbacks is called Callback Hell
 Express handled Callback Hell by introducing the next() function
 
+## USER API
+
 ### User Signup
 
 - API Endpoint (msg: User signup successfully)(/register)
-- userController.register()
+- userController.register() or userController.create()
 - register controller
 
 1. email, password check
@@ -77,3 +79,45 @@ Express handled Callback Hell by introducing the next() function
 2. compare otp
 3. if verified, update user database with isEmailVerified: true, otp: ""
 4. else Token invalid
+
+### User list (only by Admin)
+
+1. .find()
+2. secureMiddleWare(["admin"])
+3. select : false
+
+### User block (only by Admin)
+
+1. blockUse controller
+2. user findOne({_id:id})
+3. isActive = !user?.isActive
+4. user updateOne()
+
+### User delete (only by Admin)
+
+1. secureMiddleWare(["admin"])
+2. user findOne({_id:id})
+3. user deleteOne({_id:id})
+
+
+### Get user profile (by both User and Admin)
+
+1. secure()
+2. checkRole for sysRole = []
+3. token only consists name and email
+4. token decrypt
+5. use email to find user detail in secure through token decryption
+    - and get user Role as well
+6. user id => req.currentUser
+
+### Update user profile (by both User and Admin)
+
+### User password change (by User)
+
+- Requires old password as well
+
+### User password reset (only by Admin)
+
+- Done by the admin, doesnt require old password
+
+### User forget password (by both User and Admin)

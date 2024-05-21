@@ -38,7 +38,6 @@ router.post(
     try {
       if (request.file) {
         request.body.profile = request.file.path;
-        s;
       }
       const result = await userController.create(request.body);
       response.json({ msg: "register successful", data: result });
@@ -105,7 +104,7 @@ router.patch(
 );
 
 // delete a user
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.removeById(req.params.id);
     res.json({ msg: "Deleted User", data: result });
@@ -136,7 +135,18 @@ router.put("/profile", secureMiddleWare(), async (req, res, next) => {
   }
 });
 
+// get user details
 router.get("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
+  try {
+    const result = await userController.getById(req.params.id);
+    res.json({ msg: "User detail generated", data: result });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// update user details
+router.patch("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.getById(req.params.id);
     res.json({ msg: "User detail generated", data: result });
@@ -158,7 +168,7 @@ router.post(
   }
 );
 
-// reset password (by admin)
+// reset password (by admin) send email
 router.post(
   "/reset-password",
   secureMiddleWare(["admin"]),
@@ -171,7 +181,7 @@ router.post(
   }
 );
 
-// forget password
+// forget password, send email to user
 router.post("/forget-password", async (req, res, next) => {
   try {
     res.json({ msg: "All users" });
