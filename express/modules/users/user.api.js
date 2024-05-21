@@ -113,7 +113,7 @@ router.delete("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
   }
 });
 
-// get profile
+// get my profile
 router.get("/profile", secureMiddleWare(), async (req, res, next) => {
   try {
     const result = await userController.getProfile(req.currentUser);
@@ -145,23 +145,27 @@ router.get("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
   }
 });
 
-// update user details
-router.patch("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
-  try {
-    const result = await userController.getById(req.params.id);
-    res.json({ msg: "User detail generated", data: result });
-  } catch (e) {
-    next(e);
-  }
-});
+// // update user details
+// router.patch("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
+//   try {
+//     const result = await userController.getById(req.params.id);
+//     res.json({ msg: "User detail generated", data: result });
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 // change password
-router.post(
+router.patch(
   "/change-password",
-  secureMiddleWare(["admin"]),
-  (req, res, next) => {
+  secureMiddleWare(["admin", "user"]),
+  async (req, res, next) => {
     try {
-      res.json({ msg: "All users" });
+      const result = await userController.changePassword(
+        req.currentUser,
+        req.body
+      );
+      res.json({ msg: "Password Changed Successfuly", data: result });
     } catch (e) {
       next(e);
     }
@@ -169,24 +173,38 @@ router.post(
 );
 
 // reset password (by admin) send email
-router.post(
+router.patch(
   "/reset-password",
   secureMiddleWare(["admin"]),
-  (req, res, next) => {
+  async (req, res, next) => {
     try {
-      res.json({ msg: "All users" });
+      const { id, newPassword } = req.body;
+      const result = await userController.resetPassword(id, newPassword);
+      res.json({ msg: "All users", data: result });
     } catch (e) {
       next(e);
     }
   }
 );
 
-// forget password, send email to user
-router.post("/forget-password", async (req, res, next) => {
+// forget password, send otp email to user
+router.post("/forget-password-token", async (req, res, next) => {
   try {
-    res.json({ msg: "All users" });
+    const result = await userController.forgetPasswordTokenGeneration(req.body);
+    res.json({ msg: "OTP sent to email", data: result });
   } catch (e) {
     next(e);
   }
 });
+
+// forget password change password
+router.post("/forget-password-change", async (req, res, next) => {
+  try {
+    const result = await userController.forgetPasswordChangePass(req.body);
+    res.json({ msg: "Password Changed Successfully", data: result });
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;

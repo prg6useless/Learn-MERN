@@ -5,6 +5,7 @@ const { signToken, generateOTP } = require("../../utils/token");
 const event = require("events");
 const { EventEmitter } = require("stream");
 const { sendMail } = require("../../services/email");
+const { hashSync } = require("bcryptjs");
 
 const myEvent = new event.EventEmitter();
 
@@ -115,6 +116,78 @@ const getById = async (id) => {
   return userModel.findOne({ _id: id }); //_id-> of database
 };
 
+const changePassword = async (id, payload) => {
+  const { oldPassword, newPassword } = payload;
+  // does user in concern exist?
+  const user = await userModel
+    .findOne({
+      _id: id,
+      isActive: true,
+      isEmailVerified: true,
+    })
+    .select("+password");
+  if (!user) throw new Error("User Not Found");
+  // oldpassword with database
+  const isValidPassword = compareHash(user?.password, oldPassword);
+  if (!isValidPassword)
+    throw new Error("Old Password does not match with current user password");
+  // convert newPassword to hash and save to database
+  return userModel.updateOne(
+    { _id: id },
+    { password: generateHash(newPassword) }
+  );
+};
+
+const resetPassword = async (id, newPassword) => {
+  // does user in concern exist?
+  const user = await userModel.findOne({
+    _id: id,
+    isActive: true,
+    isEmailVerified: true,
+  });
+  if (!user) throw new Error("User Not Found");
+  // convert newPassword to hash and save to database
+  return userModel.updateOne(
+    { _id: id },
+    { password: generateHash(newPassword) }
+  );
+};
+
+const forgetPasswordTokenGeneration = async (payload) => {
+  const { email } = payload;
+  const user = await userModel.findOne({
+    email,
+    isActive: true,
+    isEmailVerified: true,
+  });
+  if (!user) throw new Error("User Not Found");
+  const OTPToken = generateOTP();
+  const updatedUser = await userModel.updateOne({ email }, { otp: OTPToken });
+  if (!updatedUser) throw new Error("Soemthing went wrong");
+  myEvent.emit("emailVerification", email, OTPToken);
+  return true;
+};
+
+const forgetPasswordChangePass = async (payload) => {
+  // does user in concern exist?
+  const { email, otp, newPassword } = payload;
+  const user = await userModel.findOne({
+    email,
+    isActive: true,
+    isEmailVerified: true,
+  });
+  if (!user) throw new Error("User Not Found");
+  // convert newPassword to hash and save to database
+  if (otp !== user?.otp) throw new Error("Otp mismatch");
+  const hashPassword = generateHash(newPassword);
+  const updatedUser = await userModel.updateOne(
+    { email },
+    { password: hashPassword, otp: "" }
+  );
+  if (!updatedUser) throw new Error("Soemthing went wrong");
+  return true;
+};
+
 module.exports = {
   create,
   login,
@@ -126,4 +199,8 @@ module.exports = {
   getProfile,
   updateById,
   removeById,
+  changePassword,
+  resetPassword,
+  forgetPasswordTokenGeneration,
+  forgetPasswordChangePass,
 };
