@@ -1,80 +1,92 @@
 const router = require("express").Router();
-
+const movieController = require("./movie.controller");
 const { secureMiddleWare } = require("../../utils/secure");
 
-// get all movies
-router.get("/", (req, res, next) => {
+// create new movie
+router.post("/", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
-    res.json({ msg: "All Movies" });
+    const result = await movieController.create(req.body);
+    res.json({ msg: "movie Created", data: result });
   } catch (e) {
     next(e);
   }
 });
 
-// create new movie
-router.post("/", secureMiddleWare(["admin"]), (req, res, next) => {
+// get all movies
+router.get("/", async (req, res, next) => {
   try {
-    const { movieName, quantity } = req.body;
-    res.json({ msg: "movie Created" });
+    const result = await movieController.list();
+    res.json({ msg: "All movies", data: result });
   } catch (e) {
     next(e);
   }
 });
 
 // get movie by id
-router.get("/:id", (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
-    const { id } = req.params;
-    res.json({ msg: `movie id : ${id}` });
+    const result = await movieController.getById(req.params.id);
+    res.json({ msg: `movie id : ${req.params.id}`, data: result });
   } catch (e) {
     next(e);
   }
 });
 
 //update movie  by id
-router.patch("/:id", (req, res, next) => {
+router.put("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
-    const { id } = req.params;
-    res.json({ msg: `updated movie of id : ${id}` });
+    const result = await movieController.update(req.params.id, req.body);
+    res.json({ msg: "movie updated", data: result });
   } catch (e) {
     next(e);
   }
 });
 
 //delete movie by id
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
-    const { id } = req.params;
-    res.json({ msg: `deleted movie of id : ${id}` });
+    const result = await movieController.remove(req.params.id);
+    res.json({ msg: "movie updated", data: result });
   } catch (e) {
     next(e);
   }
 });
 
 //update seats for one movie by id
-router.patch("/:id/seats", (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { seats } = req.body;
-    res.json({
-      msg: `seats for movie of id : ${id} has been updated to ${seats} seats available`,
-    });
-  } catch (e) {
-    next(e);
+router.patch(
+  "/:id/seats",
+  secureMiddleWare(["admin"]),
+  async (req, res, next) => {
+    try {
+      const result = await movieController.updateSeats(req.params.id, req.body);
+      res.json({
+        msg: "seats has been updated",
+        data: result,
+      });
+    } catch (e) {
+      next(e);
+    }
   }
-});
+);
 
 //change release date of one movie by id
-router.patch("/:id/release-date", (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { releaseDate } = req.body;
-    res.json({
-      msg: `Release Date of movie of id : ${id} has been updated to ${releaseDate}`,
-    });
-  } catch (e) {
-    next(e);
+router.patch(
+  "/:id/release-date",
+  secureMiddleWare(["admin"]),
+  async (req, res, next) => {
+    try {
+      const result = await movieController.updateReleaseDate(
+        req.params.id,
+        req.body
+      );
+      res.json({
+        msg: "release data has been updated",
+        data: result,
+      });
+    } catch (e) {
+      next(e);
+    }
   }
-});
+);
 
 module.exports = router;
