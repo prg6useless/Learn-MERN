@@ -2,15 +2,47 @@ const router = require("express").Router();
 const movieController = require("./movie.controller");
 const { secureMiddleWare } = require("../../utils/secure");
 
-// create new movie
-router.post("/", secureMiddleWare(["admin"]), async (req, res, next) => {
-  try {
-    const result = await movieController.create(req.body);
-    res.json({ msg: "movie Created", data: result });
-  } catch (e) {
-    next(e);
-  }
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/upload/movies");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname.concat(
+        "-",
+        Date.now(),
+        ".",
+        file.originalname.split(".")[1]
+      )
+    );
+  },
 });
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 }, // in bytes (1 MB = 1000000 bytes)
+});
+
+// create new movie
+router.post(
+  "/",
+  secureMiddleWare(["admin"]),
+  upload.single("poster"),
+  async (req, res, next) => {
+    try {
+      if (req.file) {
+        req.body.poster = req.file.path;
+      }
+      req.body.createdBy = req.currentUser;
+      const result = await movieController.create(req.body);
+      res.json({ msg: "movie Created", data: result });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 // get all movies
 router.get("/", async (req, res, next) => {
@@ -23,9 +55,9 @@ router.get("/", async (req, res, next) => {
 });
 
 // get movie by id
-router.get("/:id", async (req, res, next) => {
+router.get("/:slug", async (req, res, next) => {
   try {
-    const result = await movieController.getById(req.params.id);
+    const result = await movieController.getBySlug(req.params.slug);
     res.json({ msg: `movie id : ${req.params.id}`, data: result });
   } catch (e) {
     next(e);
@@ -33,9 +65,9 @@ router.get("/:id", async (req, res, next) => {
 });
 
 //update movie  by id
-router.put("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
+router.put("/:slug", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
-    const result = await movieController.update(req.params.id, req.body);
+    const result = await movieController.update(req.params.slug, req.body);
     res.json({ msg: "movie updated", data: result });
   } catch (e) {
     next(e);
@@ -43,9 +75,9 @@ router.put("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
 });
 
 //delete movie by id
-router.delete("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
+router.delete("/:slug", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
-    const result = await movieController.remove(req.params.id);
+    const result = await movieController.remove(req.params.slug);
     res.json({ msg: "movie updated", data: result });
   } catch (e) {
     next(e);
@@ -54,11 +86,11 @@ router.delete("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
 
 //update seats for one movie by id
 router.patch(
-  "/:id/seats",
+  "/:slug/seats",
   secureMiddleWare(["admin"]),
   async (req, res, next) => {
     try {
-      const result = await movieController.updateSeats(req.params.id, req.body);
+      const result = await movieController.updateSeats(req.params.slug, req.body);
       res.json({
         msg: "seats has been updated",
         data: result,
@@ -71,12 +103,12 @@ router.patch(
 
 //change release date of one movie by id
 router.patch(
-  "/:id/release-date",
+  "/:slug/release-date",
   secureMiddleWare(["admin"]),
   async (req, res, next) => {
     try {
       const result = await movieController.updateReleaseDate(
-        req.params.id,
+        req.params.slug,
         req.body
       );
       res.json({

@@ -1,5 +1,6 @@
 // CRUD operations
 const movieModel = require("./movie.model");
+const { slugger } = require("../../utils/text");
 
 // movie create {create}
 // movie list {list}
@@ -11,12 +12,12 @@ const movieModel = require("./movie.model");
 
 const create = async (payload) => {
   // create slug from title eg : The Invincibles slug->the-invincibles {use slugify package in /utils}
-  const slug = "";
+  const slugTitle = slugger(payload.title);
   // check if slug exists in database
-  const movie = await movieModel.findOne({ slug });
+  const movie = await movieModel.findOne({ slug: slugTitle });
   if (movie) throw new Error("Movie title already exists");
   // create movie
-  payload.slug = slug;
+  payload.slug = slugTitle;
   return await movieModel.create(payload);
 };
 
@@ -24,34 +25,35 @@ const list = async () => {
   return await movieModel.find();
 };
 
-const getById = async (_id) => {
-  return await movieModel.findOne({ _id });
+const getBySlug = async (slug) => {
+  return await movieModel.findOne({ slug });
 };
 
-const update = async (_id, payload) => {
-  return await movieModel.findOneAndUpdate({ _id }, payload, { new: true });
+const update = async (slug, payload) => {
+  // TODO check if movie exists and also use slug instead of id
+  return await movieModel.findOneAndUpdate({ slug }, payload, { new: true });
 };
 
-const updateReleaseDate = async (_id, payload) => {
+const updateReleaseDate = async (slug, payload) => {
   // check if releaseDate is older than today {use moment, luxon, date-fns}
-  return await movieModel.findOneAndUpdate({ _id }, payload, { new: true });
+  return await movieModel.findOneAndUpdate({ slug }, payload, { new: true });
 };
 
-const updateSeats = async (_id, payload) => {
+const updateSeats = async (slug, payload) => {
   // check if the movie seats are less than defined number(process.env.MIN_SEATS)
-  return await movieModel.findOneAndUpdate({ _id }, payload, { new: true });
+  return await movieModel.findOneAndUpdate({ slug }, payload, { new: true });
 };
 
-const remove = async (_id) => {
+const remove = async (slug) => {
   // movie's ticket must not have been sold
   // the movie should not be ongoing (should not be in between relase and end dates)
-  return await movieModel.deleteOne({ _id });
+  return await movieModel.deleteOne({ slug });
 };
 
 module.exports = {
   create,
   list,
-  getById,
+  getBySlug,
   update,
   updateReleaseDate,
   updateSeats,

@@ -9,6 +9,8 @@
 // day 39 - Movies API
 const { Schema, model } = require("mongoose");
 
+const { ObjectId } = Schema.Types;
+
 const movieSchema = new Schema(
   {
     title: { type: String, required: true, unique: true },
@@ -16,11 +18,13 @@ const movieSchema = new Schema(
     duration: { type: String, required: true },
     synopsis: { type: String },
     poster: { type: String, required: true },
-    releaseDate: { type: Date, required: true, default: Date.now() },
-    endDate: { type: Date, required: true, default: Date.now() },
+    releaseDate: { type: Date, required: true, default: Date.now },
+    endDate: { type: Date, required: true },
     seats: { type: Number, required: true, default: 0 },
-    // To Do {reference with user}
-    // createdBy : {type:String}
+    // TODO {reference with user}
+    // Day 40 - Movies and Other APIs
+    createdBy: { type: ObjectId, ref: "User" },
+    updatedBy: { type: ObjectId, ref: "User" }, //ref:"User" referring to the Users collection
   },
   { timestamps: true }
 );
