@@ -90,7 +90,7 @@ router.get("/", secureMiddleWare(["admin"]), async (req, res, next) => {
 });
 
 // block a user (by admin) set isActive:false
-router.patch(
+router.patch( 
   "/:id/block",
   secureMiddleWare(["admin"]),
   async (req, res, next) => {

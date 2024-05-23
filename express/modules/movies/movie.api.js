@@ -54,7 +54,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// get movie by id
+// get movie by slug
 router.get("/:slug", async (req, res, next) => {
   try {
     const result = await movieController.getBySlug(req.params.slug);
@@ -64,7 +64,7 @@ router.get("/:slug", async (req, res, next) => {
   }
 });
 
-//update movie  by id
+//update movie  by slug
 router.put("/:slug", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
     const result = await movieController.update(req.params.slug, req.body);
@@ -74,7 +74,7 @@ router.put("/:slug", secureMiddleWare(["admin"]), async (req, res, next) => {
   }
 });
 
-//delete movie by id
+//delete movie by slug
 router.delete("/:slug", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
     const result = await movieController.remove(req.params.slug);
@@ -84,13 +84,16 @@ router.delete("/:slug", secureMiddleWare(["admin"]), async (req, res, next) => {
   }
 });
 
-//update seats for one movie by id
+//update seats for one movie by slug
 router.patch(
   "/:slug/seats",
   secureMiddleWare(["admin"]),
   async (req, res, next) => {
     try {
-      const result = await movieController.updateSeats(req.params.slug, req.body);
+      const result = await movieController.updateSeats(
+        req.params.slug,
+        req.body
+      );
       res.json({
         msg: "seats has been updated",
         data: result,
