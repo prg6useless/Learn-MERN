@@ -82,8 +82,77 @@ const verifyEmail = async (payload) => {
   return validOTP;
 };
 
-const list = async () => {
-  return await userModel.find();
+const list = async ({ page = 1, limit = 2, search }) => {
+  // advanced operations -> pagination, sort, filter, search
+  const query = [];
+
+  // search
+  if (search?.name) {
+    query.push({
+      $match: {
+        name: new RegExp(search?.name, "gi"),
+      },
+    });
+  }
+  if (search?.email) {
+    query.push({
+      $match: {
+        email: new RegExp(search?.email, "gi"),
+      },
+    });
+  }
+
+  // sort
+  query.push({
+    $sort: {
+      createdAt: 1,
+    },
+  });
+
+  // filter based on role assignment
+
+  // pagination
+  query.push(
+    {
+      $facet: {
+        metadata: [
+          {
+            $count: "total",
+          },
+        ],
+        data: [
+          {
+            $skip: (+page - 1) * +limit, // +limit ->Number(limit)
+          },
+          {
+            $limit: +limit,
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        total: {
+          $arrayElemAt: ["$metadata.total", 0],
+        },
+      },
+    },
+    {
+      $project: {
+        metadata: 0,
+        "data.password": 0,
+      },
+    }
+  );
+
+  const result = await userModel.aggregate(query);
+
+  return {
+    total: result[0]?.total || 0,
+    users: result[0]?.data,
+    page: +page, //+page = Number(page)
+    limit: +limit, //+limit = Number(limit)
+  };
 };
 
 const blockUser = async (payload) => {

@@ -81,8 +81,10 @@ router.post("/verify-email", async (request, response, next) => {
 //get all users
 router.get("/", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
-    // advanced operations required
-    const data = await userController.list();
+    // advanced operations required -> pagination, sort, filter, search
+    const { page, limit, name, email } = req.query;
+    const search = { name, email };
+    const data = await userController.list({ page, limit, search });
     res.json({ msg: "All users", data });
   } catch (e) {
     next(e);
@@ -90,7 +92,7 @@ router.get("/", secureMiddleWare(["admin"]), async (req, res, next) => {
 });
 
 // block a user (by admin) set isActive:false
-router.patch( 
+router.patch(
   "/:id/block",
   secureMiddleWare(["admin"]),
   async (req, res, next) => {
