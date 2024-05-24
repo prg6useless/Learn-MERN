@@ -21,6 +21,7 @@ const movieSchema = new Schema(
     releaseDate: { type: Date, required: true, default: Date.now },
     endDate: { type: Date, required: true },
     seats: { type: Number, required: true, default: 0 },
+    price: { type: Number, required: true },
     // TODO {reference with user}
     // Day 40 - Movies and Other APIs
     createdBy: { type: ObjectId, ref: "User" },

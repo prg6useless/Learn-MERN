@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const { secureMiddleWare } = require("../../utils/secure");
+const orderController = require("./order.controller");
 
 //route level middleware
 const middleWare = (req, res, next) => {
@@ -10,10 +12,10 @@ const middleWare = (req, res, next) => {
 };
 
 // create new order
-router.post("/", (req, res, next) => {
+router.post("/", secureMiddleWare(), async (req, res, next) => {
   try {
-    const { movieName, quantity } = req.body;
-    res.json({ msg: "Order Created" });
+    const result = await orderController.create(req.body);
+    res.json({ msg: "Order Created", data: result });
   } catch (e) {
     next(e);
   }

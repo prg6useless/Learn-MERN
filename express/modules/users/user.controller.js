@@ -82,7 +82,7 @@ const verifyEmail = async (payload) => {
   return validOTP;
 };
 
-const list = async ({ page = 1, limit = 2, search }) => {
+const list = async ({ page = 1, limit = 2, role, search }) => {
   // advanced operations -> pagination, sort, filter, search
   const query = [];
 
@@ -110,6 +110,13 @@ const list = async ({ page = 1, limit = 2, search }) => {
   });
 
   // filter based on role assignment
+  if (role) {
+    query.push({
+      $match: {
+        roles: filter,
+      },
+    });
+  }
 
   // pagination
   query.push(

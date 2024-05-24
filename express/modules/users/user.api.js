@@ -82,9 +82,10 @@ router.post("/verify-email", async (request, response, next) => {
 router.get("/", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
     // advanced operations required -> pagination, sort, filter, search
-    const { page, limit, name, email } = req.query;
+    const { page, limit, name, email, role } = req.query;
+    const filter = {role}
     const search = { name, email };
-    const data = await userController.list({ page, limit, search });
+    const data = await userController.list({ page, limit, filter, search });
     res.json({ msg: "All users", data });
   } catch (e) {
     next(e);
