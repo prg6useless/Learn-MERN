@@ -37,7 +37,7 @@ router.post(
       }
       req.body.createdBy = req.currentUser;
       const result = await movieController.create(req.body);
-      res.json({ msg: "movie Created", data: result });
+      res.json({ msg: "Created new movie", data: result });
     } catch (e) {
       next(e);
     }
@@ -58,27 +58,36 @@ router.get("/", async (req, res, next) => {
 router.get("/:slug", async (req, res, next) => {
   try {
     const result = await movieController.getBySlug(req.params.slug);
-    res.json({ msg: `movie id : ${req.params.id}`, data: result });
+    res.json({ msg: `Movie slug : ${req.params.slug}`, data: result });
   } catch (e) {
     next(e);
   }
 });
 
 //update movie  by slug
-router.put("/:slug", secureMiddleWare(["admin"]), async (req, res, next) => {
-  try {
-    const result = await movieController.update(req.params.slug, req.body);
-    res.json({ msg: "movie updated", data: result });
-  } catch (e) {
-    next(e);
+router.put(
+  "/:slug",
+  secureMiddleWare(["admin"]),
+  upload.single("poster"),
+  async (req, res, next) => {
+    try {
+      if (req.file) {
+        req.body.poster = req.file.path;
+      }
+      req.body.updatedBy = req.currentUser;
+      const result = await movieController.update(req.params.slug, req.body);
+      res.json({ msg: "Movie updated successfully", data: result });
+    } catch (e) {
+      next(e);
+    }
   }
-});
+);
 
 //delete movie by slug
 router.delete("/:slug", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
     const result = await movieController.remove(req.params.slug);
-    res.json({ msg: "movie updated", data: result });
+    res.json({ msg: "Movie deleted succesfully", data: result });
   } catch (e) {
     next(e);
   }
@@ -90,12 +99,13 @@ router.patch(
   secureMiddleWare(["admin"]),
   async (req, res, next) => {
     try {
+      req.body.updatedBy = req.currentUser;
       const result = await movieController.updateSeats(
         req.params.slug,
         req.body
       );
       res.json({
-        msg: "seats has been updated",
+        msg: "No of seats has been updated",
         data: result,
       });
     } catch (e) {
@@ -110,12 +120,13 @@ router.patch(
   secureMiddleWare(["admin"]),
   async (req, res, next) => {
     try {
+      req.body.updatedBy = req.currentUser;
       const result = await movieController.updateReleaseDate(
         req.params.slug,
         req.body
       );
       res.json({
-        msg: "release data has been updated",
+        msg: "Movie release data has been updated",
         data: result,
       });
     } catch (e) {

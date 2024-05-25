@@ -83,7 +83,7 @@ router.get("/", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
     // advanced operations required -> pagination, sort, filter, search
     const { page, limit, name, email, role } = req.query;
-    const filter = {role}
+    const filter = { role };
     const search = { name, email };
     const data = await userController.list({ page, limit, filter, search });
     res.json({ msg: "All users", data });
@@ -183,7 +183,7 @@ router.patch(
     try {
       const { id, newPassword } = req.body;
       const result = await userController.resetPassword(id, newPassword);
-      res.json({ msg: "All users", data: result });
+      res.json({ msg: "Password reset successfully", data: result });
     } catch (e) {
       next(e);
     }
