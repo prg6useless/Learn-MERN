@@ -45,5 +45,6 @@
    a. Dynamic Dropdown
    b. Pagination
    c. Search
+   d. Sort
 
 ### Project (MovieMate)
