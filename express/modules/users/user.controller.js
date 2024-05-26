@@ -109,7 +109,7 @@ const list = async ({ page = 1, limit = 2, role, search }) => {
     },
   });
 
-  // filter based on role assignment, accept array remaining
+  // filter based on role assignment, TODO accept array remaining
   if (role) {
     query.push({
       $match: {
