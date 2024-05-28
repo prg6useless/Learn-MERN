@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { secureMiddleWare } = require("../../utils/secure");
 const orderController = require("./order.controller");
+const orderModel = require("./order.model");
 
 //route level middleware
 const middleWare = (req, res, next) => {
@@ -22,9 +23,13 @@ router.post("/", secureMiddleWare(), async (req, res, next) => {
 });
 
 // get all orders
-router.get("/", async (req, res, next) => {
+router.get("/", secureMiddleWare(), async (req, res, next) => {
   try {
-    const result = await orderController.list();
+    const { page, limit, showAll } = req.query;
+    const search = {
+      id: showAll && req.isAdmin ? "" : req.currentUser,
+    };
+    const result = await orderController.list({ page, limit, search });
     res.json({ msg: "All orders", data: result }); // req.body arriving from application level middleware
   } catch (e) {
     next(e);
@@ -32,41 +37,38 @@ router.get("/", async (req, res, next) => {
 });
 
 // get order by id
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", secureMiddleWare(), async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await orderController.getById(id);
-    res.json({ msg: "order", data: result });
-  } catch (e) {
-    next(e);
-  }
-});
-
-//delete order by id
-router.delete("/:id", (req, res, next) => {
-  try {
-    const { id } = req.params;
-    res.json({ msg: `deleted order of id : ${id}` });
+    res.json({ msg: `One single order with order id : ${id}`, data: result });
   } catch (e) {
     next(e);
   }
 });
 
 //change status by id
-router.patch("/:id/status", (req, res, next) => {
-  try {
-    const { id } = req.params;
-    res.json({ msg: `status changed of order of id : ${id}` });
-  } catch (e) {
-    next(e);
+router.patch(
+  "/:id/status",
+  secureMiddleWare(["admin"]),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      req.body.approvedBy = req.currentUser;
+      const result = await orderController.changeStatus(id, req.body);
+      res.json({ msg: `status changed of order of id : ${id}`, data: result });
+    } catch (e) {
+      next(e);
+    }
   }
-});
+);
 
 //update order  by id
-router.patch("/:id", (req, res, next) => {
+router.put("/:id", secureMiddleWare(["admin"]), async (req, res, next) => {
   try {
     const { id } = req.params;
-    res.json({ msg: `updated order of id : ${id}` });
+    const result = await orderController.updateById(id, req.body);
+    res.json({ msg: `updated order of id : ${id}`, data: result });
   } catch (e) {
     next(e);
   }

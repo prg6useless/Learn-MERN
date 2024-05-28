@@ -54,13 +54,67 @@ const getById = async (id) => {
       },
     },
   ]);
-  return result;
+  return result[0];
 };
 
-const updateById = (id, paylaod) => {};
+const updateById = async (id, payload) => {
+  const { status, ...rest } = payload;
+  return await orderModel.findOneAndUpdate({ id }, rest, { new: true });
+};
 
-const list = ({ page, limit, search }) => {};
+const list = async ({ page = 1, limit = 5, search }) => {
+  // advanced operations -> pagination, sort, filter, search
+  const query = [];
 
-const changeStatus = (id, payload) => {};
+  // search
+  if (search.id) {
+    query.push({
+      $match: {
+        buyer: search.id,
+      },
+    });
+  }
+
+  // pagination
+  query.push(
+    {
+      $facet: {
+        metadata: [
+          {
+            $count: "total",
+          },
+        ],
+        data: [
+          {
+            $skip: (+page - 1) * +limit, // +limit ->Number(limit)
+          },
+          {
+            $limit: +limit,
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        total: {
+          $arrayElemAt: ["$metadata.total", 0],
+        },
+      },
+    }
+  );
+
+  const result = await orderModel.aggregate(query);
+
+  return {
+    total: result[0]?.total || 0,
+    orders: result[0]?.data,
+    page: +page, //+page = Number(page)
+    limit: +limit, //+limit = Number(limit)
+  };
+};
+
+const changeStatus = async (id, payload) => {
+  return await orderModel.findOneAndUpdate({ id }, payload, { new: true });
+};
 
 module.exports = { create, getById, updateById, list, changeStatus };
