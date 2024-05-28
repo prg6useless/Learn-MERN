@@ -22,19 +22,21 @@ router.post("/", secureMiddleWare(), async (req, res, next) => {
 });
 
 // get all orders
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    res.json({ msg: "All orders", data: req.body }); // req.body arriving from application level middleware
+    const result = await orderController.list();
+    res.json({ msg: "All orders", data: result }); // req.body arriving from application level middleware
   } catch (e) {
     next(e);
   }
 });
 
 // get order by id
-router.get("/:id", (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    res.json({ msg: "order" });
+    const result = await orderController.getById(id);
+    res.json({ msg: "order", data: result });
   } catch (e) {
     next(e);
   }

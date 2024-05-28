@@ -13,27 +13,48 @@
 </head>
 
 <body>
-    <!-- 
-        table 
-        img 
-        class vs id
-        p
-        list (ul vs ol)
-        div vs span
-        video audio
-        em vs px vs rem
-        px -> static, pixels
-        em -> relative to the parent element
-        rem -> relative to the root element, usually the html tag which is 16px by default
-     -->
-    Hello
-    <h1></h1>
-    <h2></h2>
     <img src="https://preview.redd.it/i-got-bored-so-i-decided-to-draw-a-random-image-on-the-v0-4ig97vv85vjb1.png?width=640&crop=smart&auto=webp&s=22ed6cc79cba3013b84967f32726d087e539b699"
-        alt="mario image"
+        alt="mario image" height="100px"
         onerror="this.src=`https://images.pexels.com/photos/3844788/pexels-photo-3844788.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500`">
 
     <!-- HTML Forms -->
+    <!-- <form onsubmit="formSubmit();return false"> -->
+
+    <form onsubmit="formSubmit(event);" id="contactForm">
+        <label for="firstName"> FirstName: </label>
+        <br />
+        <input type="input" id="firstName" name="firstName" required />
+        <br />
+        <label for="lastName"> LastName: </label>
+        <br />
+        <input type="input" id="lastName" name="lastName" required />
+        <br />
+        <label for="password"> Password: </label>
+        <br />
+        <input type="password" id="password" name="password" required />
+        <br />
+        <label for="email"> Email: </label>
+        <br />
+        <input type="email" id="email" name="email" required />
+        <br />
+        <br />
+        <label for="selectedData"> Select Hobby: </label>
+        <select name="hobby">
+            <option value="">Coding</option>
+            <option value="fishing">Fishing</option>
+            <option value="dancing">Dancing</option>
+        </select>
+        <br />
+        <br />
+        <textarea rows="10" cols="50" name="msg">type here</textarea>
+        <br />
+        <br />
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </form>
+
+    <div id="systemMsg"></div>
+    <script src="index.js"></script>
 </body>
 
 </html>

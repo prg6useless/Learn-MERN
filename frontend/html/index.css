@@ -1,4 +1,48 @@
 * {
-    color: white;
-    background-color: black;
+  color: white;
+  background-color: black;
+}
+
+.forms fieldset {
+  border: 2px dotted firebrick;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.forms {
+  margin: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.forms label {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1.5rem;
+}
+
+.forms input {
+  width: 50%;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 2rem;
+  border: 2px solid black;
+}
+
+.forms button {
+  width: 16rem;
+  height: 3rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1rem;
+  background-color: darkturquoise;
+  color: white;
+  font-weight: bold;
+}
+
+.forms button:hover {
+  width: 18rem;
+  height: 4rem;
+  background-color: chartreuse;
+  border-radius: 4px;
+  text-decoration: 2px underline red;
+  cursor: pointer;
 }

@@ -8,13 +8,11 @@
 
 // day 42 - Wrapping up Backend
 const { Schema, model } = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
-
 const { ObjectId } = Schema.Types;
 
 const orderSchema = new Schema(
   {
-    id: { type: String, default: uuidv4(), unique: true },
+    id: { type: String, unique: true, required: true },
     buyer: { type: ObjectId, ref: "User", required: true },
     total: { type: Number, required: true },
     products: [
@@ -33,7 +31,7 @@ const orderSchema = new Schema(
     status: {
       type: String,
       enum: ["completed", "pending", "failed", "cancelled"],
-      deafult: "pending",
+      default: "pending",
     },
     approvedBy: { type: ObjectId, ref: "User" },
   },

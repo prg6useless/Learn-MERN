@@ -1,6 +1,12 @@
 ### Frontend Basics
 
 1. HTML
+
+   - em vs px vs rem
+   - px -> static, pixels
+   - em -> relative to the parent element
+   - rem -> relative to the root element, usually the html tag which is 16px by default
+
 2. CSS
 3. JS (Arrays and Objects)
 4. Events (OnClick, OnChange, OnHover)
