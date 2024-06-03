@@ -146,7 +146,7 @@ const newArray = array3.filter(
 
 console.log(newArray);
 
-// sort bu author name
+// sort by author name
 
 const names = [
   { author: "Victor", title: "The Road Ahead" },
@@ -165,3 +165,25 @@ names.sort((a, b) => {
 });
 
 console.log(names);
+
+let arr1 = ["Momo", "Pizza", "Ice-cream"];
+let arr2 = ["Fruits", "Veggies", "Pizza"];
+
+const findCommonItem = (array_one, array_two) => {
+  let common_item = new Array();
+  for (let i = 0; i < array_one.length; i++) {
+    for (let j = 0; j < array_two.length; j++) {
+      if (array_one[i] === array_two[j]) {
+        common_item.push(array_one[i]);
+      }
+    }
+  }
+  if (common_item.length === 0) return "no common items found";
+  return common_item;
+};
+
+console.log(findCommonItem(arr1, arr2));
+
+const CommonItem = (array1, array2) =>
+  array1.filter((item) => array2.includes(item));
+console.log(CommonItem(arr1, arr2));
