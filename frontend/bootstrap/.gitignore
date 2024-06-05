@@ -1,1 +1,5 @@
-*.png
+
+
+/node_modules
+
+/assets/*
