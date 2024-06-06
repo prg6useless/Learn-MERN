@@ -11,9 +11,18 @@
     <div id="products">
 
     </div>
-    <button onclick="getProducts('/products');return false">
+    <input type="text" id="username" placeholder="username">
+    <input type="text" id="password" placeholder="password">
+    <button onclick="login();return false;">
+        Login
+    </button><br />
+    <!-- <button onclick="getProducts('/products');return false;">
         Click me
-    </button>
+    </button> -->
+    <p id="userInfo"></p>
+    <button onclick="getData();return false;">
+        Get Data
+    </button><br />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="axios.js"></script>
 </body>
