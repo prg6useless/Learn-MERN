@@ -2,6 +2,7 @@
 import { useState } from "react";
 import List from "./Components/List";
 import Login from "./Components/Login";
+import Effect from "./Components/Effect";
 
 function App() {
   const [color, setColor] = useState("red");
@@ -26,7 +27,7 @@ function App() {
   return (
     <>
       {/* <Goal /> */}
-      <br />
+      {/* <br />
       <Login />
       <List data={car} />
       <br />
@@ -52,14 +53,16 @@ function App() {
           })
         }
       />
-      {/*controlled form,*/}
+      {/*controlled form,
       <br />
       <br />
       {person?.name}
       <br />
       {person?.age}
       <br />
-      {person?.gender}
+      {person?.gender} */}
+      <br />
+      <Effect />
     </>
   );
 }

@@ -1,8 +1,27 @@
-# React + Vite
+# Hooks
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## useState
 
-Currently, two official plugins are available:
+## useEffect
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- To handle side effects
+
+1. No dependency passed:
+    - useEffect(()=>{
+        // runs on every render
+    });
+
+    - for timers
+
+2. An empty Array
+    - useEffect(()=>{
+        // runs only on first render
+    },[]);
+
+    - fetching data
+
+3. A dependency Array
+    - useEffect(()=>{
+        // runs on the first render
+        // runs when the value in dependency array changes
+    },[prop,state]);
