@@ -12,8 +12,10 @@ API data search feaature add
 hw : sorting
 */
 
-import { useState, useEffect } from "react";
-import instance from "../utils/axios";
+import { useState } from "react";
+import TableContent from "./TableContent";
+import useDebounce from "../Hooks/useDebounce";
+import useFetch from "../Hooks/useFetch";
 
 // SCENARIO 1 :
 
@@ -37,15 +39,19 @@ import instance from "../utils/axios";
 //   const [data, setData] = useState([]);
 //   //   const { data } = await instance.get(url);
 //   useEffect(() => {
+//     const controller = new AbortController();
 //     const fetchRecipe = async () => {
 //       try {
-//         const { data } = await instance.get("recipes/search");
+//         const { data } = await instance.get("recipes/search", {
+//           signal: controller.signal,
+//         });
 //         setData(data.recipes);
 //       } catch (error) {
 //         console.log(error);
 //       }
 //     };
 //     fetchRecipe();
+//     return () => controller.abort();
 //   }, []);
 //   return (
 //     <>
@@ -61,100 +67,179 @@ import instance from "../utils/axios";
 
 // SCENARIO 3 :
 
+// const Effect = () => {
+//   // const [data, setData] = useState([]);
+
+//   const [expiryTime, setExpiryTime] = useState("03 oct 2024 00:00:00");
+//   const [countdownTime, setCountdownTime] = useState({
+//     countdownDays: "",
+//     countdownHours: "",
+//     countdownlMinutes: "",
+//     countdownSeconds: "",
+//   });
+
+//   const countdownTimer = () => {
+//     const timeInterval = setInterval(() => {
+//       const countdownDateTime = new Date(expiryTime).getTime();
+//       const currentTime = new Date().getTime();
+//       const remainingDayTime = countdownDateTime - currentTime;
+//       const totalDays = Math.floor(remainingDayTime / (1000 * 60 * 60 * 24));
+//       const totalHours = Math.floor(
+//         (remainingDayTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+//       );
+//       const totalMinutes = Math.floor(
+//         (remainingDayTime % (1000 * 60 * 60)) / (1000 * 60)
+//       );
+//       const totalSeconds = Math.floor((remainingDayTime % (1000 * 60)) / 1000);
+
+//       const runningCountdownTime = {
+//         countdownDays: totalDays,
+//         countdownHours: totalHours,
+//         countdownMinutes: totalMinutes,
+//         countdownSeconds: totalSeconds,
+//       };
+
+//       setCountdownTime(runningCountdownTime);
+//       if (remainingDayTime < 0) {
+//         clearInterval(timeInterval);
+//         setExpiryTime(false);
+//       }
+//     }, 1000);
+//   };
+
+//   useEffect(() => {
+//     countdownTimer();
+//     return () => clearTimeout(countdownTimer);
+//   });
+
+//   // useEffect(() => {
+//   //   const controller = new AbortController();
+
+//   //   const fetchRecipe = async () => {
+//   //     const { data } = await instance.get(
+//   //       `recipes/search?q=${result}&limit=${limit}&skip=${skip}`,
+//   //       { signal: controller.signal }
+//   //     );
+//   //     // add limit and skip as dropdown
+//   //     console.log(data.recipes);
+//   //     setData(data.recipes);
+//   //   };
+//   //   fetchRecipe();
+//   //   return () => controller.abort(); // cleanup
+//   // }, [result, skip, limit]);
+
+//   return (
+//     <>
+//       <p>Days : {countdownTime.countdownDays}</p>
+//       <p>
+//         CountDown to Dashain : {countdownTime.countdownHours}:
+//         {countdownTime.countdownMinutes}:{countdownTime.countdownSeconds}
+//       </p>
+//       <p>Dashain : {expiryTime}</p>
+//       <input
+//         placeholder="Search"
+//         onChange={(e) => setSearch(e.target.value)}
+//       ></input>
+//       {/* {data.map((item) => {
+//         return <p key={item.id}>{item.name}</p>;
+//       })} */}
+
+//       {/* <TableContent data={data}></TableContent> */}
+
+//       <p>Skips</p>
+//       <select id="skips" onChange={(e) => setSkip(e.target.value)}>
+//         <option value="1">1</option>
+//         <option value="2">2</option>
+//         <option value="3">3</option>
+//         <option value="4">4</option>
+//         <option value="5">5</option>
+//         <option value="6">6</option>
+//         <option value="7">7</option>
+//       </select>
+//       <p>Limits</p>
+//       <select
+//         id="limits"
+//         defaultValue={5}
+//         onChange={(e) => setLimit(e.target.value)}
+//       >
+//         <option value="1">1</option>
+//         <option value="2">2</option>
+//         <option value="3">3</option>
+//         <option value="4">4</option>
+//         <option value="5">5</option>
+//         <option value="6">6</option>
+//         <option value="7">7</option>
+//       </select>
+//     </>
+//   );
+// };
+
+// CLEANUP
+
+// const Effect = () => {
+//   const [count, setCount] = useState(10);
+
+//   useEffect(() => {
+//     const timer =
+//       count === -1
+//         ? setCount(0)
+//         : setTimeout(() => {
+//             setCount(count - 1);
+//           }, 1000);
+//     return () => clearTimeout(timer); // cleanup
+//   });
+//   return <>{count}</>;
+// };
+
 const Effect = () => {
-  const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
-  const [skip, setSkip] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  const [expiryTime, setExpiryTime] = useState("03 oct 2024 00:00:00");
-  const [countdownTime, setCountdownTime] = useState({
-    countdownDays: "",
-    countdownHours: "",
-    countdownlMinutes: "",
-    countdownSeconds: "",
+  // const [recipes, setRecipes] = useState([]);
+  // const [skip, setSkip] = useState(0);
+  // const [limit, setLimit] = useState(5);
+  const { result } = useDebounce({ searchTerm: search });
+  const { loading, error, data } = useFetch({
+    url: `recipes/search?q=${result}`,
   });
-
-  const countdownTimer = () => {
-    const timeInterval = setInterval(() => {
-      const countdownDateTime = new Date(expiryTime).getTime();
-      const currentTime = new Date().getTime();
-      const remainingDayTime = countdownDateTime - currentTime;
-      const totalDays = Math.floor(remainingDayTime / (1000 * 60 * 60 * 24));
-      const totalHours = Math.floor(
-        (remainingDayTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const totalMinutes = Math.floor(
-        (remainingDayTime % (1000 * 60 * 60)) / (1000 * 60)
-      );
-      const totalSeconds = Math.floor((remainingDayTime % (1000 * 60)) / 1000);
-
-      const runningCountdownTime = {
-        countdownDays: totalDays,
-        countdownHours: totalHours,
-        countdownMinutes: totalMinutes,
-        countdownSeconds: totalSeconds,
-      };
-
-      setCountdownTime(runningCountdownTime);
-
-      if (remainingDayTime < 0) {
-        clearInterval(timeInterval);
-        setExpiryTime(false);
-      }
-    }, 1000);
-  };
-
-  useEffect(() => {
-    countdownTimer();
-  });
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      const { data } = await instance.get(
-        `recipes/search?q=${search}&limit=${limit}&skip=${skip}`
-      );
-      // add limit and skip as dropdown
-      console.log(data.recipes);
-      setData(data.recipes);
-    };
-    fetchRecipe();
-  }, [search, skip, limit]);
   return (
     <>
-      <p>Days : {countdownTime.countdownDays}</p>
-      <p>
-        CountDown to Dashain : {countdownTime.countdownHours}:
-        {countdownTime.countdownMinutes}:{countdownTime.countdownSeconds}
-      </p>
-      <p>Dashain : {expiryTime}</p>
-      <input
-        placeholder="Search"
-        onChange={(e) => setSearch(e.target.value)}
-      ></input>
-      {data.map((item) => {
-        return <p key={item.id}>{item.name}</p>;
-      })}
-      <p>Skips</p>
-      <select id="skips" onChange={(e) => setSkip(e.target.value)}>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-      </select>
-      <p>Limits</p>
-      <select id="limits" onChange={(e) => setLimit(e.target.value)}>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-      </select>
+      <input placeholder="Search" onChange={(e) => setSearch(e.target.value)} />
+      <br />
+      {/* {error && JSON.stringify(error)} */}
+      {loading ? (
+        <>Data Loading...</>
+      ) : (
+        <TableContent data={data && data.recipes ? data.recipes : []} />
+        // <p>
+        //   <table border={1}>
+        //     <tbody>
+        //       <tr>
+        //         <th>Id</th>
+        //         <th>Name</th>
+        //         <th>Ingredients</th>
+        //         <th>Instructions</th>
+        //       </tr>
+        //       {data && data.recipes && data.recipes.length > 0 ? (
+        //         data.recipes.map((item) => {
+        //           return (
+        //             <tr key={item.id}>
+        //               <td>{item.id}</td>
+        //               <td>{item.name}</td>
+        //               <td>{item.ingredients}</td>
+        //               <td>{item.instructions}</td>
+        //             </tr>
+        //           );
+        //         })
+        //       ) : (
+        //         <tr>
+        //           <td colSpan={3} style={{ textAlign: "center" }}>
+        //             No Data
+        //           </td>
+        //         </tr>
+        //       )}
+        //     </tbody>
+        //   </table>
+        // </p>
+      )}
     </>
   );
 };
