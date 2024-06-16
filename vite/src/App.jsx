@@ -2,7 +2,10 @@
 // import { useState } from "react";
 // import List from "./Components/List";
 // import Login from "./Components/Login";
+import Dropdown from "./Components/Dropdown";
 import Effect from "./Components/Effect";
+import ParentComp from "./Components/ParentComp";
+import Timer from "./Components/Timer";
 
 function App() {
   // const [color, setColor] = useState("red");
@@ -62,7 +65,10 @@ function App() {
       <br />
       {person?.gender} */}
       <br />
-      <Effect />
+      {/* <Effect /> */}
+      {/* <Dropdown /> */}
+      {/* <Timer /> */}
+      <ParentComp user="Saral"/>
     </>
   );
 }

@@ -194,52 +194,54 @@ import useFetch from "../Hooks/useFetch";
 const Effect = () => {
   const [search, setSearch] = useState("");
   // const [recipes, setRecipes] = useState([]);
-  // const [skip, setSkip] = useState(0);
-  // const [limit, setLimit] = useState(5);
+  const [skip, setSkip] = useState(0);
+  const [limit, setLimit] = useState(5);
   const { result } = useDebounce({ searchTerm: search });
   const { loading, error, data } = useFetch({
-    url: `recipes/search?q=${result}`,
+    url: `recipes/search?q=${result}&limit=${limit}&skip=${skip}`,
   });
   return (
     <>
       <input placeholder="Search" onChange={(e) => setSearch(e.target.value)} />
       <br />
-      {/* {error && JSON.stringify(error)} */}
-      {loading ? (
+      {error && JSON.stringify(error)}
+      {loading && data ? (
         <>Data Loading...</>
       ) : (
-        <TableContent data={data && data.recipes ? data.recipes : []} />
-        // <p>
-        //   <table border={1}>
-        //     <tbody>
-        //       <tr>
-        //         <th>Id</th>
-        //         <th>Name</th>
-        //         <th>Ingredients</th>
-        //         <th>Instructions</th>
-        //       </tr>
-        //       {data && data.recipes && data.recipes.length > 0 ? (
-        //         data.recipes.map((item) => {
-        //           return (
-        //             <tr key={item.id}>
-        //               <td>{item.id}</td>
-        //               <td>{item.name}</td>
-        //               <td>{item.ingredients}</td>
-        //               <td>{item.instructions}</td>
-        //             </tr>
-        //           );
-        //         })
-        //       ) : (
-        //         <tr>
-        //           <td colSpan={3} style={{ textAlign: "center" }}>
-        //             No Data
-        //           </td>
-        //         </tr>
-        //       )}
-        //     </tbody>
-        //   </table>
-        // </p>
+        <TableContent data={data.recipes} />
       )}
+      <p>Skips</p>
+      <select
+        id="skips"
+        defaultChecked={0}
+        defaultValue={skip}
+        onChange={(e) => setSkip(e.target.value)}
+      >
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+      </select>
+      <p>Limits</p>
+      <select
+        id="limits"
+        defaultChecked={5}
+        defaultValue={limit}
+        onChange={(e) => setLimit(e.target.value)}
+      >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+      </select>
+
     </>
   );
 };

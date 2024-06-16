@@ -1,4 +1,4 @@
-const TableContent = ({ data }) => {
+const TableContent = ({ data = [] }) => {
   return (
     <>
       <table border={1}>
