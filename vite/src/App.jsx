@@ -2,12 +2,17 @@
 // import { useState } from "react";
 // import List from "./Components/List";
 // import Login from "./Components/Login";
-import Dropdown from "./Components/Dropdown";
-import Effect from "./Components/Effect";
-import ParentComp from "./Components/ParentComp";
-import Timer from "./Components/Timer";
-
-function App() {
+// import Dropdown from "./Components/Dropdown";
+// import Effect from "./Components/Effect";
+// import ParentComp from "./Components/ParentComp";
+// import Timer from "./Components/Timer";
+// import MovieDetail from "./Components/MovieDetail";
+// import NavBar from "./Components/NavBar";
+import ThemeContext from "./context/ThemeContext";
+import "./App.css";
+import Title from "./Components/Title";
+import ToggleButton from "./Components/ToggleButton";
+const App = () => {
   // const [color, setColor] = useState("red");
   // const [count, setCount] = useState(0);
   // const [loading, setLoading] = useState(false);
@@ -29,6 +34,15 @@ function App() {
   // });
   return (
     <>
+      {" "}
+      <ThemeContext>
+        <Title />
+        <ToggleButton />
+      </ThemeContext>
+      {/* <AppContext>
+        {/* <NavBar />
+        <MovieDetail /> 
+      </AppContext> */}
       {/* <Goal /> */}
       {/* <br />
       <Login />
@@ -68,13 +82,9 @@ function App() {
       {/* <Effect /> */}
       {/* <Dropdown /> */}
       {/* <Timer /> */}
-      <ParentComp user="Saral"/>
+      {/* <ParentComp user="Saral"/> */}
     </>
   );
-}
+};
 
 export default App;
-
-export const Content = () => {
-  return <div>Some Content</div>;
-};
