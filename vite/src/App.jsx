@@ -9,7 +9,7 @@
 // import MovieDetail from "./Components/MovieDetail";
 // import NavBar from "./Components/NavBar";
 // import ThemeContext from "./context/ThemeContext";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import "./App.css";
 import Todo from "./Components/Todo";
 // import FormTemplate from "./Forms/FormTemplate";
@@ -93,15 +93,27 @@ import Todo from "./Components/Todo";
 
 // export default App;
 
+const calc = (num) => {
+  console.log("calculating....");
+  for (let i = 0; i <= 1000000000; i++) {
+    num += 1;
+  }
+  return num;
+};
+
 const App = () => {
   const [count, setCount] = useState(0);
   const [todos, setTodos] = useState([]);
+
+  // freezing data using useMemo
+  const calcutation = useMemo(() => calc(count), [count]);
 
   const increase = () => {
     console.log("count increase component rerender");
     setCount((count) => count + 1);
   };
 
+  // freezing  function using useCallback
   const addTodo = useCallback(() => {
     setTodos((todo) => [...todo, "new todo"]);
   }, []);
@@ -115,9 +127,20 @@ const App = () => {
         <br />
         <button onClick={increase}>Increase</button>
         <p>{count}</p>
+        <p>{calcutation}</p>
       </div>
     </>
   );
 };
 
 export default App;
+
+/*
+
+  Write two components
+  1. App.jsx
+     a. Make API calls using custom hook and useEffect
+  2. Pokemon.jsx as props, pass pokenmonArray, offset
+     a. Change offset value form Pokemon.jsx
+
+*/
