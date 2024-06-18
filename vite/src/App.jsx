@@ -9,9 +9,11 @@
 // import MovieDetail from "./Components/MovieDetail";
 // import NavBar from "./Components/NavBar";
 // import ThemeContext from "./context/ThemeContext";
+import { useState, useCallback } from "react";
 import "./App.css";
-import FormTemplate from "./Forms/FormTemplate";
-import UncontrolledFrom from "./Forms/UncontrolledFrom";
+import Todo from "./Components/Todo";
+// import FormTemplate from "./Forms/FormTemplate";
+// import UncontrolledFrom from "./Forms/UncontrolledFrom";
 // import Title from "./Components/Title";
 // import ToggleButton from "./Components/ToggleButton";
 // const App = () => {
@@ -92,11 +94,27 @@ import UncontrolledFrom from "./Forms/UncontrolledFrom";
 // export default App;
 
 const App = () => {
+  const [count, setCount] = useState(0);
+  const [todos, setTodos] = useState([]);
+
+  const increase = () => {
+    console.log("count increase component rerender");
+    setCount((count) => count + 1);
+  };
+
+  const addTodo = useCallback(() => {
+    setTodos((todo) => [...todo, "new todo"]);
+  }, []);
+
   return (
     <>
       <div className="d-flex flex-column justify-content-center align-items-center">
-        <FormTemplate />
-        <UncontrolledFrom />
+        {/* <FormTemplate />
+        <UncontrolledFrom /> */}
+        <Todo todos={todos} addTodo={addTodo} />
+        <br />
+        <button onClick={increase}>Increase</button>
+        <p>{count}</p>
       </div>
     </>
   );

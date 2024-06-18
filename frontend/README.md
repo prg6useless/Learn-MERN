@@ -44,10 +44,11 @@
    c. useRef
    d. useContext
 2. Optimization Techniques
-   a. useCallback
-   b. UseMemo
-3. Redux Toolkit
-4. Interview Related Challenges/Questions
+   a. useCallback (optimization of function )
+   b. useMemo (optimization of data for future use)
+3. React Router
+4. Redux Toolkit
+5. Interview Related Challenges/Questions
    a. Dynamic Dropdown
    b. Pagination
    c. Search
