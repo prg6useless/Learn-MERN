@@ -1,4 +1,5 @@
 import Button from "react-bootstrap/Button";
+import { memo } from "react";
 
 const Pokemon = ({ pokemon = [], increaseOffset, decreaseOffset }) => {
   return (
@@ -17,4 +18,4 @@ const Pokemon = ({ pokemon = [], increaseOffset, decreaseOffset }) => {
   );
 };
 
-export default Pokemon;
+export default memo(Pokemon);

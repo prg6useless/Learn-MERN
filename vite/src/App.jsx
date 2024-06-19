@@ -146,12 +146,11 @@
 */
 
 // pokemon API
-// import instance from "./utils/axios"
-// import axios from "axios";
 // import usePokemonData from "./Hooks/usePokemonData";
 // import { useState, useCallback, useMemo, useEffect } from "react";
 // import "./App.css";
 // import Pokemon from "./Components/Pokemon";
+// import SomeComp from "./Components/SomeComp";
 
 // const App = () => {
 //   const [offset, setOffset] = useState(0);
@@ -159,38 +158,61 @@
 //     url: `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${offset}`,
 //   });
 
-//   const increaseOffset = () => {
+//   const increaseOffset = useCallback(() => {
 //     setOffset((prev) => prev + 1);
-//     console.log(offset);
-//   };
+//   }, []);
+
 //   const decreaseOffset = () => {
 //     if (offset <= 0) return;
 //     setOffset((prev) => prev - 1);
-//     console.log(offset);
 //   };
 
 //   return (
 //     <>
-//       {data && (
-//         <Pokemon
-//           pokemon={data.results}
-//           increaseOffset={increaseOffset}
-//           decreaseOffset={decreaseOffset}
-//         />
-//       )}
+//       {/* {data && ( */}
+//       <Pokemon
+//         pokemon={data.results}
+//         increaseOffset={increaseOffset}
+//         decreaseOffset={decreaseOffset}
+//       />
+//       {/* )} */}
+//       <SomeComp />
 //     </>
 //   );
 // };
 
 // export default App;
 
-
-
+import Contact from "./Pages/users/Contact";
+import Login from "./Pages/users/Login";
+import Movie from "./Pages/users/Movie";
+import Movies from "./Pages/users/Movies";
+import Users from "./Pages/admin/Users";
+import ErrorPage from "./Pages/ErrorPage";
+import { Route, Routes } from "react-router-dom";
+import UserLayout from "./layouts/UserLayout";
+import AdminLayout from "./layouts/AdminLayout";
 
 const App = () => {
   return (
-    <>App</>
-  )
-}
+    <>
+      <Routes>
+        {/* User Routes */}
+        <Route path="/" element={<UserLayout />}>
+          <Route path="contact" element={<Contact />} />
+          <Route path="login" element={<Login />} />
+          <Route path="movies" element={<Movies />} />
+          <Route path="movie/:id" element={<Movie />} />
+        </Route>
+        {/* Admin Route */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="users" element={<Users />} />
+        </Route>
+        {/* Error Handling */}
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    </>
+  );
+};
 
-export default App
+export default App;
