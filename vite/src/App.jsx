@@ -9,9 +9,9 @@
 // import MovieDetail from "./Components/MovieDetail";
 // import NavBar from "./Components/NavBar";
 // import ThemeContext from "./context/ThemeContext";
-import { useState, useCallback, useMemo } from "react";
-import "./App.css";
-import Todo from "./Components/Todo";
+
+// import Todo from "./Components/Todo";
+
 // import FormTemplate from "./Forms/FormTemplate";
 // import UncontrolledFrom from "./Forms/UncontrolledFrom";
 // import Title from "./Components/Title";
@@ -93,47 +93,47 @@ import Todo from "./Components/Todo";
 
 // export default App;
 
-const calc = (num) => {
-  console.log("calculating....");
-  for (let i = 0; i <= 1000000000; i++) {
-    num += 1;
-  }
-  return num;
-};
+// const calc = (num) => {
+//   console.log("calculating....");
+//   for (let i = 0; i <= 1000000000; i++) {
+//     num += 1;
+//   }
+//   return num;
+// };
 
-const App = () => {
-  const [count, setCount] = useState(0);
-  const [todos, setTodos] = useState([]);
+// const App = () => {
+//   const [count, setCount] = useState(0);
+//   const [todos, setTodos] = useState([]);
 
-  // freezing data using useMemo
-  const calcutation = useMemo(() => calc(count), [count]);
+//   // freezing data using useMemo
+//   const calcutation = useMemo(() => calc(count), [count]);
 
-  const increase = () => {
-    console.log("count increase component rerender");
-    setCount((count) => count + 1);
-  };
+//   const increase = () => {
+//     console.log("count increase component rerender");
+//     setCount((count) => count + 1);
+//   };
 
-  // freezing  function using useCallback
-  const addTodo = useCallback(() => {
-    setTodos((todo) => [...todo, "new todo"]);
-  }, []);
+//   // freezing  function using useCallback
+//   const addTodo = useCallback(() => {
+//     setTodos((todo) => [...todo, "new todo"]);
+//   }, []);
 
-  return (
-    <>
-      <div className="d-flex flex-column justify-content-center align-items-center">
-        {/* <FormTemplate />
-        <UncontrolledFrom /> */}
-        <Todo todos={todos} addTodo={addTodo} />
-        <br />
-        <button onClick={increase}>Increase</button>
-        <p>{count}</p>
-        <p>{calcutation}</p>
-      </div>
-    </>
-  );
-};
+//   return (
+//     <>
+//       <div className="d-flex flex-column justify-content-center align-items-center">
+//         {/* <FormTemplate />
+//         <UncontrolledFrom /> */}
+//         <Todo todos={todos} addTodo={addTodo} />
+//         <br />
+//         <button onClick={increase}>Increase</button>
+//         <p>{count}</p>
+//         <p>{calcutation}</p>
+//       </div>
+//     </>
+//   );
+// };
 
-export default App;
+// export default App;
 
 /*
 
@@ -144,3 +144,53 @@ export default App;
      a. Change offset value form Pokemon.jsx
 
 */
+
+// pokemon API
+// import instance from "./utils/axios"
+// import axios from "axios";
+// import usePokemonData from "./Hooks/usePokemonData";
+// import { useState, useCallback, useMemo, useEffect } from "react";
+// import "./App.css";
+// import Pokemon from "./Components/Pokemon";
+
+// const App = () => {
+//   const [offset, setOffset] = useState(0);
+//   const { loading, error, data } = usePokemonData({
+//     url: `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${offset}`,
+//   });
+
+//   const increaseOffset = () => {
+//     setOffset((prev) => prev + 1);
+//     console.log(offset);
+//   };
+//   const decreaseOffset = () => {
+//     if (offset <= 0) return;
+//     setOffset((prev) => prev - 1);
+//     console.log(offset);
+//   };
+
+//   return (
+//     <>
+//       {data && (
+//         <Pokemon
+//           pokemon={data.results}
+//           increaseOffset={increaseOffset}
+//           decreaseOffset={decreaseOffset}
+//         />
+//       )}
+//     </>
+//   );
+// };
+
+// export default App;
+
+
+
+
+const App = () => {
+  return (
+    <>App</>
+  )
+}
+
+export default App
